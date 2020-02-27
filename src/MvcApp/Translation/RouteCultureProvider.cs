@@ -7,20 +7,20 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
-namespace MvcApp
+namespace MvcApp.Translation
 {
     /// <summary>
     /// https://stackoverflow.com/questions/38170739/handle-culture-in-route-url-via-requestcultureproviders
     /// </summary>
     public class RouteCultureProvider : IRequestCultureProvider
     {
-        private readonly CultureInfo defaultCulture;
-        private readonly CultureInfo defaultUICulture;
+        private readonly CultureInfo _defaultCulture;
+        private readonly CultureInfo _defaultUICulture;
 
         public RouteCultureProvider(RequestCulture requestCulture)
         {
-            defaultCulture = requestCulture.Culture;
-            defaultUICulture = requestCulture.UICulture;
+            _defaultCulture = requestCulture.Culture;
+            _defaultUICulture = requestCulture.UICulture;
         }
 
         public Task<ProviderCultureResult> DetermineProviderCultureResult(HttpContext httpContext)
@@ -32,8 +32,8 @@ namespace MvcApp
                 // Set default Culture and default UICulture
                 return Task.FromResult(
                     new ProviderCultureResult(
-                        this.defaultCulture.TwoLetterISOLanguageName
-                        , this.defaultUICulture.TwoLetterISOLanguageName)
+                        this._defaultCulture.TwoLetterISOLanguageName
+                        , this._defaultUICulture.TwoLetterISOLanguageName)
                     );
             }
 
@@ -46,8 +46,8 @@ namespace MvcApp
                 // Set default Culture and default UICulture
                 return Task.FromResult(
                     new ProviderCultureResult(
-                        this.defaultCulture.TwoLetterISOLanguageName
-                        , this.defaultUICulture.TwoLetterISOLanguageName)
+                        this._defaultCulture.TwoLetterISOLanguageName
+                        , this._defaultUICulture.TwoLetterISOLanguageName)
                     );
             }
 

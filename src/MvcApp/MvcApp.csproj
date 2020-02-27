@@ -5,7 +5,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Example" />
     <Folder Include="Resources" />
     <Compile Update="Translations\Controller.Designer.cs">
       <DependentUpon>Controller.resx</DependentUpon>
