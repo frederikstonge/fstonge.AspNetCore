@@ -27,7 +27,7 @@ namespace MvcApp.Translation
             }
 
             var values = GetValuesDictionary(urlActionContext.Values);
-            var currentCulture = GetCurrentCulture(urlActionContext, values);
+            var currentCulture = GetCurrentCulture(values);
 
             var controller = GetControllerValue(urlActionContext, values);
             if (!string.IsNullOrEmpty(controller))
@@ -53,7 +53,7 @@ namespace MvcApp.Translation
                 }
                 else if (action.Equals("index", StringComparison.OrdinalIgnoreCase))
                 {
-                    path = $"{cultureString}/{values["controller"]}/13-lightning";
+                    path = $"{cultureString}/{values["controller"]}/{id}-lightning";
                 }
             }
             else
@@ -87,7 +87,7 @@ namespace MvcApp.Translation
             return GenerateUrl(routeContext.Protocol, routeContext.Host, path);
         }
 
-        private CultureInfo GetCurrentCulture(UrlActionContext urlActionContext, RouteValueDictionary values)
+        private CultureInfo GetCurrentCulture(RouteValueDictionary values)
         {
             var currentCulture = CultureInfo.CurrentCulture;
             if (AmbientValues.TryGetValue("culture", out var ambiantCulture))
@@ -144,7 +144,13 @@ namespace MvcApp.Translation
         private string GetParameterValue(RouteValueDictionary values, string parameterName)
         {
             string parameter = null;
-            if (values.ContainsKey(parameterName) && values.TryGetValue(parameterName, out var parameterValue))
+
+            if (AmbientValues.TryGetValue(parameterName, out var ambientParameterValue))
+            {
+                parameter = (string)ambientParameterValue;
+            }
+            
+            else if (values.TryGetValue(parameterName, out var parameterValue))
             {
                 parameter = (string)parameterValue;
             }
