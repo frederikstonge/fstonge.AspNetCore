@@ -77,5 +77,14 @@ namespace MvcApp.Translation {
                 return ResourceManager.GetString("orders", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to products.
+        /// </summary>
+        public static string products {
+            get {
+                return ResourceManager.GetString("products", resourceCulture);
+            }
+        }
     }
 }

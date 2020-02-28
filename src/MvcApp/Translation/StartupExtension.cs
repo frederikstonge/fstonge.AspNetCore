@@ -17,7 +17,7 @@ namespace MvcApp.Translation
         {
             var locOptions = app.ApplicationServices.GetService<IOptions<RequestLocalizationOptions>>();
             app.UseRequestLocalization(locOptions.Value);
-            
+
             var rewriteOptions = new RewriteOptions();
             var assembly = typeof(StartupExtension).Assembly;
             var resourceName = $"{assembly.GetName().Name}.Translation.ApacheModRewrite.txt";
@@ -35,6 +35,7 @@ namespace MvcApp.Translation
             app.UseRewriter(rewriteOptions);
             
             app.UseRouting();
+            app.UseStaticFiles();
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(

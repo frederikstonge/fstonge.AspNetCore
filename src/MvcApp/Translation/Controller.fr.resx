@@ -24,4 +24,7 @@
     <data name="orders" xml:space="preserve">
     <value>commandes</value>
   </data>
+    <data name="products" xml:space="preserve">
+    <value>produits</value>
+  </data>
 </root>

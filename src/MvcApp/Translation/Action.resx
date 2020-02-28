@@ -24,4 +24,7 @@
     <data name="list" xml:space="preserve">
     <value>list</value>
   </data>
+    <data name="detail" xml:space="preserve">
+    <value>detail</value>
+  </data>
 </root>

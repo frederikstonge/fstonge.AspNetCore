@@ -61,6 +61,15 @@ namespace MvcApp.Translation {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to detail.
+        /// </summary>
+        public static string detail {
+            get {
+                return ResourceManager.GetString("detail", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to index.
         /// </summary>
         public static string index {
