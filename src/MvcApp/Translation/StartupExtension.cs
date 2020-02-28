@@ -1,7 +1,9 @@
 ﻿using System.Globalization;
+using System.IO;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc.Routing;
+using Microsoft.AspNetCore.Rewrite;
 using Microsoft.AspNetCore.Routing.Constraints;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -15,6 +17,23 @@ namespace MvcApp.Translation
         {
             var locOptions = app.ApplicationServices.GetService<IOptions<RequestLocalizationOptions>>();
             app.UseRequestLocalization(locOptions.Value);
+            
+            var rewriteOptions = new RewriteOptions();
+            var assembly = typeof(StartupExtension).Assembly;
+            var resourceName = $"{assembly.GetName().Name}.Translation.ApacheModRewrite.txt";
+            using (var apacheModRewriteStream = assembly.GetManifestResourceStream(resourceName))
+            {
+                if (apacheModRewriteStream != null)
+                {
+                    using (StreamReader apacheModRewriteStreamReader = new StreamReader(apacheModRewriteStream))
+                    {
+                        rewriteOptions.AddApacheModRewrite(apacheModRewriteStreamReader);
+                    }
+                }
+            }
+
+            app.UseRewriter(rewriteOptions);
+            
             app.UseRouting();
             app.UseEndpoints(endpoints =>
             {

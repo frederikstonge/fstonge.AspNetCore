@@ -1,0 +1,26 @@
+﻿# With mod_rewrite
+RewriteEngine On
+
+# Product Detail Page
+RewriteRule ^/(fr)/produits/[-/a-zA-Z0-9]+/p-([=._a-zA-Z0-9]+)-.* /$1/Products/Detail/$2 [L,NC]
+RewriteRule ^/([a-zA-Z]{2})/products/[-/a-zA-Z0-9]+/p-([=._a-zA-Z0-9]+)-.* /$1/Products/Detail/$2 [L,NC]
+
+# Product Listing Page
+# Lvl 6
+RewriteRule ^/(fr)/produits/([0-9][0-9])-[-/a-zA-Z0-9]+/([0-9][0-9])-[-/a-zA-Z0-9]+/([0-9][0-9])-[-/a-zA-Z0-9]+/([0-9][0-9])-[-/a-zA-Z0-9]+/([0-9][0-9])-[-/a-zA-Z0-9]+/([0-9][0-9])-[-/a-zA-Z0-9]+$ /$1/Products/Index/10$2$3$4$5$6$7 [L,NC]
+RewriteRule ^/([a-zA-Z]{2})/products/([0-9][0-9])-[-/a-zA-Z0-9]+/([0-9][0-9])-[-/a-zA-Z0-9]+/([0-9][0-9])-[-/a-zA-Z0-9]+/([0-9][0-9])-[-/a-zA-Z0-9]+/([0-9][0-9])-[-/a-zA-Z0-9]+/([0-9][0-9])-[-/a-zA-Z0-9]+$ /$1/Products/Index/10$2$3$4$5$6$7 [L,NC]
+# Lvl 5
+RewriteRule ^/(fr)/produits/([0-9][0-9])-[-/a-zA-Z0-9]+/([0-9][0-9])-[-/a-zA-Z0-9]+/([0-9][0-9])-[-/a-zA-Z0-9]+/([0-9][0-9])-[-/a-zA-Z0-9]+/([0-9][0-9])-[-/a-zA-Z0-9]+$ /$1/Products/Index/10$2$3$4$5$600 [L,NC]
+RewriteRule ^/([a-zA-Z]{2})/products/([0-9][0-9])-[-/a-zA-Z0-9]+/([0-9][0-9])-[-/a-zA-Z0-9]+/([0-9][0-9])-[-/a-zA-Z0-9]+/([0-9][0-9])-[-/a-zA-Z0-9]+/([0-9][0-9])-[-/a-zA-Z0-9]+$ /$1/Products/Index/10$2$3$4$5$600 [L,NC]
+# Lvl 4
+RewriteRule ^/(fr)/produits/([0-9][0-9])-[-/a-zA-Z0-9]+/([0-9][0-9])-[-/a-zA-Z0-9]+/([0-9][0-9])-[-/a-zA-Z0-9]+/([0-9][0-9])-[-/a-zA-Z0-9]+$ /$1/Products/Index/10$2$3$4$50000 [L,NC]
+RewriteRule ^/([a-zA-Z]{2})/products/([0-9][0-9])-[-/a-zA-Z0-9]+/([0-9][0-9])-[-/a-zA-Z0-9]+/([0-9][0-9])-[-/a-zA-Z0-9]+/([0-9][0-9])-[-/a-zA-Z0-9]+$ /$1/Products/Index/10$2$3$4$50000 [L,NC]
+# Lvl 3
+RewriteRule ^/(fr)/produits/([0-9][0-9])-[-/a-zA-Z0-9]+/([0-9][0-9])-[-/a-zA-Z0-9]+/([0-9][0-9])-[-/a-zA-Z0-9]+$ /$1/Products/Index/10$2$3$4000000 [L,NC]
+RewriteRule ^/([a-zA-Z]{2})/products/([0-9][0-9])-[-/a-zA-Z0-9]+/([0-9][0-9])-[-/a-zA-Z0-9]+/([0-9][0-9])-[-/a-zA-Z0-9]+$ /$1/Products/Index/10$2$3$4000000 [L,NC]
+# Lvl 2
+RewriteRule ^/(fr)/produits/([0-9][0-9])-[-/a-zA-Z0-9]+/([0-9][0-9])-[-/a-zA-Z0-9]+$ /$1/Products/Index/10$2$300000000 [L,NC]
+RewriteRule ^/([a-zA-Z]{2})/products/([0-9][0-9])-[-/a-zA-Z0-9]+/([0-9][0-9])-[-/a-zA-Z0-9]+$ /$1/Products/Index/10$2$300000000 [L,NC]
+# Lvl 1
+RewriteRule ^/(fr)/produits/([0-9][0-9])-[-/a-zA-Z0-9]+$ /$1/Products/Index/10$20000000000 [L,NC]
+RewriteRule ^/([a-zA-Z]{2})/products/([0-9][0-9])-[-/a-zA-Z0-9]+$ /$1/Products/Index/10$20000000000 [L,NC]
