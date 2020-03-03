@@ -4,8 +4,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
+using Randstad.Solutions.AspNetCoreRouting.Helpers;
 
-namespace MvcApp.Translation
+namespace Randstad.Solutions.AspNetCoreRouting.Factories
 {
     public class CustomUrlHelperFactory : IUrlHelperFactory
     {

@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
-namespace MvcApp.Translation
+namespace Randstad.Solutions.AspNetCoreRouting.Providers
 {
     /// <summary>
     /// https://stackoverflow.com/questions/38170739/handle-culture-in-route-url-via-requestcultureproviders

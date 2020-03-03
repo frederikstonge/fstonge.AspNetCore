@@ -4,8 +4,9 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.AspNetCore.Routing;
+using Randstad.Solutions.AspNetCoreRouting.Helpers;
 
-namespace MvcApp.Translation
+namespace Randstad.Solutions.AspNetCoreRouting.Transformers
 {
     public class TranslationTransformer : DynamicRouteValueTransformer
     {
@@ -25,16 +26,14 @@ namespace MvcApp.Translation
             var culture = (string)values["culture"];
             if (culture == "fr" || culture == "en")
             {
-                var cultureInfo = new CultureInfo(culture);
-
                 var controller = (string) values["controller"];
-                values["controller"] = Controller.ResourceManager.GetKeyByValue(controller.ToLower(), cultureInfo);
+                values["controller"] = TranslationAttributeHelper.GetControllerFromTranslatedValue(controller, culture);
 
                 var action = (string) values["action"];
-                values["action"] = Action.ResourceManager.GetKeyByValue(action.ToLower(), cultureInfo);
+                values["action"] = TranslationAttributeHelper.GetActionFromTranslatedValue(action, culture);
             }
 
-            return new ValueTask<RouteValueDictionary>(Task.FromResult(values));;
+            return new ValueTask<RouteValueDictionary>(Task.FromResult(values));
         }
     }
 }

@@ -1,8 +1,0 @@
-﻿# With mod_rewrite
-RewriteEngine On
-
-# Product Detail Page
-RewriteRule ^/([a-zA-Z]{2})/([^/]+)/[-/a-zA-Z0-9]+/p-([=._a-zA-Z0-9]+)-.* /$1/$2/Detail/$3 [L,NC]
-
-# Product Listing Page
-RewriteRule ^/([a-zA-Z]{2})/([^/]+)/([0-9][0-9])-[-/a-zA-Z0-9]+$ /$1/$2/Index/$3 [L,NC]

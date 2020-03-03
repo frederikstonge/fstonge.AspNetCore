@@ -5,27 +5,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="Translation\ApacheModRewrite.txt">
-    </EmbeddedResource>
     <Folder Include="Resources" />
-    <Compile Update="Translation\Controller.Designer.cs">
-      <DependentUpon>Controller.resx</DependentUpon>
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-    </Compile>
-    <Compile Update="Translation\Action.Designer.cs">
-      <DependentUpon>Action.resx</DependentUpon>
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-    </Compile>
-    <EmbeddedResource Update="Translation\Controller.resx">
-      <LastGenOutput>Controller.Designer.cs</LastGenOutput>
-      <Generator>PublicResXFileCodeGenerator</Generator>
-    </EmbeddedResource>
-    <EmbeddedResource Update="Translation\Action.resx">
-      <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>Action.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Randstad.Solutions.AspNetCoreRouting\Randstad.Solutions.AspNetCoreRouting.csproj" />
   </ItemGroup>
 
 </Project>

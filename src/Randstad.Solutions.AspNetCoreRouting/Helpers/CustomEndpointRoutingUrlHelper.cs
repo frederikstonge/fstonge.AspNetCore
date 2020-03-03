@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.AspNetCore.Routing;
 
-namespace MvcApp.Translation
+namespace Randstad.Solutions.AspNetCoreRouting.Helpers
 {
     public class CustomEndpointRoutingUrlHelper : UrlHelperBase
     {
@@ -32,28 +32,28 @@ namespace MvcApp.Translation
             var controller = GetControllerValue(urlActionContext, values);
             if (!string.IsNullOrEmpty(controller))
             {
-                values["controller"] = Translation.Controller.ResourceManager.GetString(controller, currentCulture);
+                values["controller"] = TranslationAttributeHelper.GetControllerName(controller, currentCulture);
             }
 
             var action = GetActionValue(urlActionContext, values);
             if (!string.IsNullOrEmpty(action))
             {
-                values["action"] = Translation.Action.ResourceManager.GetString(action, currentCulture);
+                values["action"] = TranslationAttributeHelper.GetActionName(action, currentCulture);
             }
 
+            // TODO: Make logic to inject config for rewrite and generate url
             string path;
             if (controller.Equals("products", StringComparison.OrdinalIgnoreCase))
             {
                 path = string.Empty;
                 var id = GetParameterValue(values, "id");
-                var cultureString = currentCulture.TwoLetterISOLanguageName.ToLower();
                 if (action.Equals("detail", StringComparison.OrdinalIgnoreCase))
                 {
-                    path = $"{cultureString}/{values["controller"]}/13-lightning/p-{id}-test-de-rewrite";
+                    path = $"{currentCulture}/{values["controller"]}/13-lightning/p-{id}-test-de-rewrite";
                 }
                 else if (action.Equals("index", StringComparison.OrdinalIgnoreCase))
                 {
-                    path = $"{cultureString}/{values["controller"]}/{id}-lightning";
+                    path = $"{currentCulture}/{values["controller"]}/{id}-lightning";
                 }
             }
             else
@@ -87,15 +87,15 @@ namespace MvcApp.Translation
             return GenerateUrl(routeContext.Protocol, routeContext.Host, path);
         }
 
-        private CultureInfo GetCurrentCulture(RouteValueDictionary values)
+        private string GetCurrentCulture(RouteValueDictionary values)
         {
-            var currentCulture = CultureInfo.CurrentCulture;
+            var currentCulture = CultureInfo.CurrentCulture.TwoLetterISOLanguageName.ToLower();
             if (AmbientValues.TryGetValue("culture", out var ambiantCulture))
             {
                 var ambientCultureString = (string) ambiantCulture;
                 if (ambientCultureString == "fr" || ambientCultureString == "en")
                 {
-                    currentCulture = new CultureInfo(ambientCultureString);
+                    currentCulture = ambientCultureString;
                 }
             }
 
@@ -104,7 +104,7 @@ namespace MvcApp.Translation
                 var cultureString = (string) culture;
                 if (cultureString == "fr" || cultureString == "en")
                 {
-                    currentCulture = new CultureInfo(cultureString);
+                    currentCulture = cultureString;
                 }
             }
 

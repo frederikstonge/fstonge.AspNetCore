@@ -1,5 +1,8 @@
-﻿using System.Globalization;
+﻿using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
+using System.Linq;
+using System.Reflection;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc.Routing;
@@ -8,18 +11,22 @@ using Microsoft.AspNetCore.Routing.Constraints;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Options;
+using Randstad.Solutions.AspNetCoreRouting.Factories;
+using Randstad.Solutions.AspNetCoreRouting.Providers;
+using Randstad.Solutions.AspNetCoreRouting.Transformers;
 
-namespace MvcApp.Translation
+namespace Randstad.Solutions.AspNetCoreRouting.Extensions
 {
-    public static class StartupExtension
+    public static class StartupExtensions
     {
         public static void AddLocalizedRouting(this IApplicationBuilder app)
         {
             var locOptions = app.ApplicationServices.GetService<IOptions<RequestLocalizationOptions>>();
             app.UseRequestLocalization(locOptions.Value);
 
+            // TODO: Make logic to inject config for rewrite and generate url
             var rewriteOptions = new RewriteOptions();
-            var assembly = typeof(StartupExtension).Assembly;
+            var assembly = Assembly.GetEntryAssembly();
             var resourceName = $"{assembly.GetName().Name}.Translation.ApacheModRewrite.txt";
             using (var apacheModRewriteStream = assembly.GetManifestResourceStream(resourceName))
             {
@@ -31,8 +38,11 @@ namespace MvcApp.Translation
                     }
                 }
             }
-
+            
             app.UseRewriter(rewriteOptions);
+
+            var supportedLanguages = locOptions.Value.SupportedCultures.Select(c => c.TwoLetterISOLanguageName.ToLower());
+            var defaultLanguage = locOptions.Value.DefaultRequestCulture.Culture.TwoLetterISOLanguageName.ToLower();
             
             app.UseRouting();
             app.UseStaticFiles();
@@ -43,15 +53,18 @@ namespace MvcApp.Translation
                     pattern: "{culture}/{controller=home}/{action=index}/{*id}",
                     constraints: new
                     {
-                        culture = new RegexRouteConstraint($"^(en|fr)?$")
+                        culture = new RegexRouteConstraint($"^({string.Join('|', supportedLanguages)})?$")
                     });
 
                 endpoints.MapDynamicControllerRoute<TranslationTransformer>(
-                    "{culture=en}/{controller=home}/{action=index}/{*id}");
+                    "{culture="+ defaultLanguage +"}/{controller=home}/{action=index}/{*id}");
             });
         }
 
-        public static void AddLocalizedRouting(this IServiceCollection services)
+        public static void AddLocalizedRouting(
+            this IServiceCollection services,
+            IEnumerable<string> supportedLanguages,
+            string defaultLanguage)
         {
             services.AddRouting();
             services.Replace(new ServiceDescriptor(typeof(IUrlHelperFactory), new CustomUrlHelperFactory()));
@@ -60,17 +73,13 @@ namespace MvcApp.Translation
             services.AddLocalization(options => options.ResourcesPath = "Resources");
             services.Configure<RequestLocalizationOptions>(options =>
             {
-                var supportedCultures = new[]
-                {
-                    new CultureInfo("en"),
-                    new CultureInfo("fr")
-                };
-                options.DefaultRequestCulture = new RequestCulture(culture: "en", uiCulture: "en");
+                var supportedCultures = supportedLanguages.Select(l => new CultureInfo(l)).ToArray();
+                options.DefaultRequestCulture = new RequestCulture(defaultLanguage, defaultLanguage);
                 options.SupportedCultures = supportedCultures;
                 options.SupportedUICultures = supportedCultures;
 
                 options.RequestCultureProviders.Insert(
-                    0, new RouteCultureProvider(options.DefaultRequestCulture));
+                    1, new RouteCultureProvider(options.DefaultRequestCulture));
             });
         }
     }

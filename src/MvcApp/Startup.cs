@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
-using MvcApp.Translation;
+using Randstad.Solutions.AspNetCoreRouting.Extensions;
 
 namespace MvcApp
 {
@@ -12,7 +12,8 @@ namespace MvcApp
             services.AddMvc()
                 .SetCompatibilityVersion(CompatibilityVersion.Latest);
 
-            services.AddLocalizedRouting();
+            var languages = new[] {"fr", "en"};
+            services.AddLocalizedRouting(languages, "fr");
         }
 
         public void Configure(IApplicationBuilder app)
