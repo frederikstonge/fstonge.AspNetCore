@@ -5,10 +5,11 @@ using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 using Randstad.Solutions.AspNetCoreRouting.Helpers;
+using Randstad.Solutions.AspNetCoreRouting.Services;
 
 namespace Randstad.Solutions.AspNetCoreRouting.Factories
 {
-    public class CustomUrlHelperFactory : IUrlHelperFactory
+    internal class CustomUrlHelperFactory : IUrlHelperFactory
     {
         public IUrlHelper GetUrlHelper(ActionContext context)
         {
@@ -41,8 +42,9 @@ namespace Randstad.Solutions.AspNetCoreRouting.Factories
             {
                 var services = httpContext.RequestServices;
                 var linkGenerator = services.GetRequiredService<LinkGenerator>();
+                var routeService = services.GetRequiredService<IRouteService>();
 
-                urlHelper = new CustomEndpointRoutingUrlHelper(context, linkGenerator);
+                urlHelper = new CustomEndpointRoutingUrlHelper(context, linkGenerator, routeService);
             }
             else
             {

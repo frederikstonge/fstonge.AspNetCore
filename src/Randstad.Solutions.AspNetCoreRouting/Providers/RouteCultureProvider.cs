@@ -9,10 +9,7 @@ using System.Threading.Tasks;
 
 namespace Randstad.Solutions.AspNetCoreRouting.Providers
 {
-    /// <summary>
-    /// https://stackoverflow.com/questions/38170739/handle-culture-in-route-url-via-requestcultureproviders
-    /// </summary>
-    public class RouteCultureProvider : IRequestCultureProvider
+    internal class RouteCultureProvider : IRequestCultureProvider
     {
         private readonly CultureInfo _defaultCulture;
         private readonly CultureInfo _defaultUICulture;

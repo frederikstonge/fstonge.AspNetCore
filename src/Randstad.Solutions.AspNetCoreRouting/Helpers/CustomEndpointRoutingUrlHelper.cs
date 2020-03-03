@@ -1,22 +1,27 @@
 ﻿using System;
 using System.Globalization;
+using System.Linq;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.AspNetCore.Routing;
+using Randstad.Solutions.AspNetCoreRouting.Services;
 
 namespace Randstad.Solutions.AspNetCoreRouting.Helpers
 {
-    public class CustomEndpointRoutingUrlHelper : UrlHelperBase
+    internal class CustomEndpointRoutingUrlHelper : UrlHelperBase
     {
         private readonly LinkGenerator _linkGenerator;
+        private readonly IRouteService _routeService;
 
         public CustomEndpointRoutingUrlHelper(
             ActionContext actionContext,
-            LinkGenerator linkGenerator)
+            LinkGenerator linkGenerator,
+            IRouteService routeService)
             : base(actionContext)
         {
             _linkGenerator = linkGenerator ?? throw new ArgumentNullException(nameof(linkGenerator));
+            _routeService = routeService ?? throw new ArgumentNullException(nameof(routeService));
         }
 
         public override string Action(UrlActionContext urlActionContext)
@@ -32,29 +37,29 @@ namespace Randstad.Solutions.AspNetCoreRouting.Helpers
             var controller = GetControllerValue(urlActionContext, values);
             if (!string.IsNullOrEmpty(controller))
             {
-                values["controller"] = TranslationAttributeHelper.GetControllerName(controller, currentCulture);
+                values["controller"] = _routeService.GetControllerTranslatedValue(controller, currentCulture);
             }
 
             var action = GetActionValue(urlActionContext, values);
             if (!string.IsNullOrEmpty(action))
             {
-                values["action"] = TranslationAttributeHelper.GetActionName(action, currentCulture);
+                values["action"] = _routeService.GetActionTranslatedValue(action, currentCulture);
             }
-
-            // TODO: Make logic to inject config for rewrite and generate url
+            
             string path;
-            if (controller.Equals("products", StringComparison.OrdinalIgnoreCase))
+            
+            var rules = _routeService.RouteRules.Where(r =>
+                r.Controller.Equals(controller, StringComparison.OrdinalIgnoreCase)).ToList();
+            
+            var rule = rules.FirstOrDefault(r => r.Action.Equals(action, StringComparison.OrdinalIgnoreCase));
+            if (rule == null)
             {
-                path = string.Empty;
-                var id = GetParameterValue(values, "id");
-                if (action.Equals("detail", StringComparison.OrdinalIgnoreCase))
-                {
-                    path = $"{currentCulture}/{values["controller"]}/13-lightning/p-{id}-test-de-rewrite";
-                }
-                else if (action.Equals("index", StringComparison.OrdinalIgnoreCase))
-                {
-                    path = $"{currentCulture}/{values["controller"]}/{id}-lightning";
-                }
+                rule = rules.FirstOrDefault(r => r.Action == null);
+            }
+            
+            if (rule != null)
+            {
+                path = rule.GenerateUrlPath(controller, action, values);
             }
             else
             {
@@ -66,7 +71,6 @@ namespace Randstad.Solutions.AspNetCoreRouting.Helpers
                         ? null
                         : "#" + urlActionContext.Fragment));
             }
-            
 
             return GenerateUrl(urlActionContext.Protocol, urlActionContext.Host, path);
         }

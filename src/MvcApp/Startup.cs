@@ -1,7 +1,9 @@
+using System.Collections.Generic;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using Randstad.Solutions.AspNetCoreRouting.Extensions;
+using Randstad.Solutions.AspNetCoreRouting.Models;
 
 namespace MvcApp
 {

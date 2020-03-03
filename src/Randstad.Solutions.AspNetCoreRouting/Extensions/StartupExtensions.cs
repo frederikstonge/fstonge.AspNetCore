@@ -12,30 +12,28 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Options;
 using Randstad.Solutions.AspNetCoreRouting.Factories;
+using Randstad.Solutions.AspNetCoreRouting.Models;
 using Randstad.Solutions.AspNetCoreRouting.Providers;
+using Randstad.Solutions.AspNetCoreRouting.Services;
 using Randstad.Solutions.AspNetCoreRouting.Transformers;
 
 namespace Randstad.Solutions.AspNetCoreRouting.Extensions
 {
     public static class StartupExtensions
     {
-        public static void AddLocalizedRouting(this IApplicationBuilder app)
+        public static void AddLocalizedRouting(this IApplicationBuilder app, IEnumerable<TranslationRouteRule> routeRules = null)
         {
             var locOptions = app.ApplicationServices.GetService<IOptions<RequestLocalizationOptions>>();
             app.UseRequestLocalization(locOptions.Value);
-
-            // TODO: Make logic to inject config for rewrite and generate url
+            
+            var routeService = app.ApplicationServices.GetRequiredService<IRouteService>();
+            routeService.RouteRules = routeRules?.ToList() ?? new List<TranslationRouteRule>();
             var rewriteOptions = new RewriteOptions();
-            var assembly = Assembly.GetEntryAssembly();
-            var resourceName = $"{assembly.GetName().Name}.Translation.ApacheModRewrite.txt";
-            using (var apacheModRewriteStream = assembly.GetManifestResourceStream(resourceName))
+            foreach (var routeRule in routeService.RouteRules)
             {
-                if (apacheModRewriteStream != null)
+                foreach (var rewriteRule in routeRule.RewriteRules)
                 {
-                    using (StreamReader apacheModRewriteStreamReader = new StreamReader(apacheModRewriteStream))
-                    {
-                        rewriteOptions.AddApacheModRewrite(apacheModRewriteStreamReader);
-                    }
+                    rewriteOptions.AddRewrite(rewriteRule.Regex, rewriteRule.Replacement, rewriteRule.SkipRemainingRules);
                 }
             }
             
@@ -67,9 +65,11 @@ namespace Randstad.Solutions.AspNetCoreRouting.Extensions
             string defaultLanguage)
         {
             services.AddRouting();
-            services.Replace(new ServiceDescriptor(typeof(IUrlHelperFactory), new CustomUrlHelperFactory()));
+            services.AddSingleton<IRouteService, RouteService>();
             services.AddSingleton<TranslationTransformer>();
 
+            services.Replace(new ServiceDescriptor(typeof(IUrlHelperFactory), new CustomUrlHelperFactory()));
+            
             services.AddLocalization(options => options.ResourcesPath = "Resources");
             services.Configure<RequestLocalizationOptions>(options =>
             {
