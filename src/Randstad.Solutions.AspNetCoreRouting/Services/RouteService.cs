@@ -17,7 +17,7 @@ namespace Randstad.Solutions.AspNetCoreRouting.Services
             _actionDescriptorCollectionProvider = actionDescriptorCollectionProvider;
         }
         
-        public List<TranslationRouteRule> RouteRules { get; } = new List<TranslationRouteRule>();
+        public List<CustomTranslation> RouteRules { get; } = new List<CustomTranslation>();
 
         public string GetControllerTranslatedValue(string controllerName, string culture)
         {

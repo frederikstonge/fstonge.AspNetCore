@@ -4,12 +4,12 @@ using Microsoft.AspNetCore.Routing;
 
 namespace Randstad.Solutions.AspNetCoreRouting.Models
 {
-    public class TranslationRouteRule
+    public class CustomTranslation
     {
-        public TranslationRouteRule(
+        public CustomTranslation(
             string controller,
             string action,
-            TranslationRewriteRule[] rewriteRules,
+            RewriteRule[] rewriteRules,
             GenerateUrlPath generateUrlPathCallback)
         {
             ControllerName = controller;
@@ -22,7 +22,7 @@ namespace Randstad.Solutions.AspNetCoreRouting.Models
 
         public string ActionName { get; }
 
-        public TranslationRewriteRule[] RewriteRules { get; }
+        public RewriteRule[] RewriteRules { get; }
 
         public GenerateUrlPath GenerateUrlPathCallback { get; }
 

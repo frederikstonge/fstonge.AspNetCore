@@ -23,12 +23,12 @@ namespace MvcApp
             app.AddLocalizedRouting(d =>
             {
                 d.Add(
-                    new TranslationRouteRule(
+                    new CustomTranslation(
                         "products",
                         "detail",
-                        new TranslationRewriteRule[]
+                        new RewriteRule[]
                         {
-                            //new TranslationRewriteRule("", "", true),
+                            //new RewriteRule("", ""),
                         },
                         (controllerValue, actionValue, values, ambiantValues, fragment) =>
                         {

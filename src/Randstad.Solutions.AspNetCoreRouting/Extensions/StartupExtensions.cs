@@ -22,7 +22,7 @@ namespace Randstad.Solutions.AspNetCoreRouting.Extensions
 {
     public static class StartupExtensions
     {
-        public static void AddLocalizedRouting(this IApplicationBuilder app, Action<List<TranslationRouteRule>> translationRouteRules)
+        public static void AddLocalizedRouting(this IApplicationBuilder app, Action<List<CustomTranslation>> translationRouteRules)
         {
             // Use Request localization
             var locOptions = app.ApplicationServices.GetService<IOptions<RequestLocalizationOptions>>();

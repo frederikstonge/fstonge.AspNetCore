@@ -1,8 +1,8 @@
 ﻿namespace Randstad.Solutions.AspNetCoreRouting.Models
 {
-    public class TranslationRewriteRule
+    public class RewriteRule
     {
-        public TranslationRewriteRule(string regex, string replacement, bool skipRemainingRules)
+        public RewriteRule(string regex, string replacement, bool skipRemainingRules = true)
         {
             Regex = regex;
             Replacement = replacement;
