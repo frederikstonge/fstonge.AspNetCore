@@ -59,14 +59,14 @@ namespace Randstad.Solutions.AspNetCoreRouting.Extensions
                     });
 
                 endpoints.MapDynamicControllerRoute<TranslationTransformer>(
-                    "{culture="+ defaultLanguage +"}/{controller=home}/{action=index}/{*id}");
+                    "{culture=" + defaultLanguage + "}/{controller=home}/{action=index}/{*id}");
             });
         }
 
         public static void AddLocalizedRouting(
             this IServiceCollection services,
             IEnumerable<string> supportedLanguages,
-            string defaultLanguage)
+            string defaultLanguage, string resourcePath = "Resources")
         {
             // Inject required services
             services.AddRouting();
@@ -75,7 +75,7 @@ namespace Randstad.Solutions.AspNetCoreRouting.Extensions
             services.Replace(new ServiceDescriptor(typeof(IUrlHelperFactory), new CustomUrlHelperFactory()));
             
             // Setup localizer
-            services.AddLocalization(options => options.ResourcesPath = "Resources");
+            services.AddLocalization(options => options.ResourcesPath = resourcePath);
             
             // Setup Request localization
             services.Configure<RequestLocalizationOptions>(options =>
