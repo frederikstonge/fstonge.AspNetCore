@@ -20,7 +20,18 @@ namespace MvcApp
 
         public void Configure(IApplicationBuilder app)
         {
-            app.AddLocalizedRouting();
+            app.AddLocalizedRouting(d =>
+            {
+                d.Add(
+                    new TranslationRouteRule(
+                        "products",
+                        "detail",
+                        new TranslationRewriteRule[]
+                        {
+                            //new TranslationRewriteRule("", "", true), 
+                        },
+                        (controller, action, data) => { return string.Empty; }));
+            });
         }
     }
 }

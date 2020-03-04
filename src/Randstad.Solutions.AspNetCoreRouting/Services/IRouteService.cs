@@ -5,7 +5,7 @@ namespace Randstad.Solutions.AspNetCoreRouting.Services
 {
     internal interface IRouteService
     {
-        List<TranslationRouteRule> RouteRules { get; set; }
+        List<TranslationRouteRule> RouteRules { get; }
         string GetControllerTranslatedValue(string controllerName, string culture);
         string GetControllerNameFromTranslatedValue(string translatedName, string currentCulture);
         string GetActionTranslatedValue(string actionName, string culture);

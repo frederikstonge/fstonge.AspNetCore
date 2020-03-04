@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -21,13 +22,15 @@ namespace Randstad.Solutions.AspNetCoreRouting.Extensions
 {
     public static class StartupExtensions
     {
-        public static void AddLocalizedRouting(this IApplicationBuilder app, IEnumerable<TranslationRouteRule> routeRules = null)
+        public static void AddLocalizedRouting(this IApplicationBuilder app, Action<List<TranslationRouteRule>> translationRouteRules)
         {
+            // Use Request localization
             var locOptions = app.ApplicationServices.GetService<IOptions<RequestLocalizationOptions>>();
             app.UseRequestLocalization(locOptions.Value);
             
+            // Use Rewrite rules
             var routeService = app.ApplicationServices.GetRequiredService<IRouteService>();
-            routeService.RouteRules = routeRules?.ToList() ?? new List<TranslationRouteRule>();
+            translationRouteRules.Invoke(routeService.RouteRules);
             var rewriteOptions = new RewriteOptions();
             foreach (var routeRule in routeService.RouteRules)
             {
@@ -39,6 +42,7 @@ namespace Randstad.Solutions.AspNetCoreRouting.Extensions
             
             app.UseRewriter(rewriteOptions);
 
+            // Use Endpoints Configuration
             var supportedLanguages = locOptions.Value.SupportedCultures.Select(c => c.TwoLetterISOLanguageName.ToLower());
             var defaultLanguage = locOptions.Value.DefaultRequestCulture.Culture.TwoLetterISOLanguageName.ToLower();
             
@@ -64,13 +68,16 @@ namespace Randstad.Solutions.AspNetCoreRouting.Extensions
             IEnumerable<string> supportedLanguages,
             string defaultLanguage)
         {
+            // Inject required services
             services.AddRouting();
             services.AddSingleton<IRouteService, RouteService>();
             services.AddSingleton<TranslationTransformer>();
-
             services.Replace(new ServiceDescriptor(typeof(IUrlHelperFactory), new CustomUrlHelperFactory()));
             
+            // Setup localizer
             services.AddLocalization(options => options.ResourcesPath = "Resources");
+            
+            // Setup Request localization
             services.Configure<RequestLocalizationOptions>(options =>
             {
                 var supportedCultures = supportedLanguages.Select(l => new CultureInfo(l)).ToArray();
@@ -79,7 +86,7 @@ namespace Randstad.Solutions.AspNetCoreRouting.Extensions
                 options.SupportedUICultures = supportedCultures;
 
                 options.RequestCultureProviders.Insert(
-                    1, new RouteCultureProvider(options.DefaultRequestCulture));
+                    0, new RouteCultureProvider(options.DefaultRequestCulture));
             });
         }
     }

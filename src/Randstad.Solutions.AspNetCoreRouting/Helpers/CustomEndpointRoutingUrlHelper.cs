@@ -59,7 +59,7 @@ namespace Randstad.Solutions.AspNetCoreRouting.Helpers
             
             if (rule != null)
             {
-                path = rule.GenerateUrlPath(controller, action, values);
+                path = rule.GenerateUrlPath.Invoke(controller, action, values);
             }
             else
             {
