@@ -28,9 +28,12 @@ namespace MvcApp
                         "detail",
                         new TranslationRewriteRule[]
                         {
-                            //new TranslationRewriteRule("", "", true), 
+                            //new TranslationRewriteRule("", "", true),
                         },
-                        (controller, action, data) => { return string.Empty; }));
+                        (controllerValue, actionValue, values, ambiantValues, fragment) =>
+                        {
+                            return string.Empty;
+                        }));
             });
         }
     }

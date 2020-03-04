@@ -1,4 +1,5 @@
 ﻿using System;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 
 namespace Randstad.Solutions.AspNetCoreRouting.Models
@@ -9,20 +10,27 @@ namespace Randstad.Solutions.AspNetCoreRouting.Models
             string controller,
             string action,
             TranslationRewriteRule[] rewriteRules,
-            Func<string, string, RouteValueDictionary, string> generateUrlPath)
+            GenerateUrlPath generateUrlPathCallback)
         {
-            Controller = controller;
-            Action = action;
+            ControllerName = controller;
+            ActionName = action;
             RewriteRules = rewriteRules;
-            GenerateUrlPath = generateUrlPath;
+            GenerateUrlPathCallback = generateUrlPathCallback;
         }
         
-        public string Controller { get; }
+        public string ControllerName { get; }
 
-        public string Action { get; }
+        public string ActionName { get; }
 
         public TranslationRewriteRule[] RewriteRules { get; }
 
-        public Func<string, string, RouteValueDictionary, string> GenerateUrlPath { get; }
+        public GenerateUrlPath GenerateUrlPathCallback { get; }
+
+        public delegate string GenerateUrlPath(
+            string controllerValue,
+            string actionValue, 
+            RouteValueDictionary values,
+            RouteValueDictionary ambiantValues,
+            FragmentString fragment);
     }
 }

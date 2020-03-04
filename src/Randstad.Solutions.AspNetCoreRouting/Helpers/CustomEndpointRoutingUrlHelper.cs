@@ -34,32 +34,36 @@ namespace Randstad.Solutions.AspNetCoreRouting.Helpers
             var values = GetValuesDictionary(urlActionContext.Values);
             var currentCulture = GetCurrentCulture(values);
 
-            var controller = GetControllerValue(urlActionContext, values);
-            if (!string.IsNullOrEmpty(controller))
+            var controllerValue = GetControllerValue(urlActionContext, values);
+            if (!string.IsNullOrEmpty(controllerValue))
             {
-                values["controller"] = _routeService.GetControllerTranslatedValue(controller, currentCulture);
+                values["controller"] = _routeService.GetControllerTranslatedValue(controllerValue, currentCulture);
             }
 
-            var action = GetActionValue(urlActionContext, values);
-            if (!string.IsNullOrEmpty(action))
+            var actionValue = GetActionValue(urlActionContext, values);
+            if (!string.IsNullOrEmpty(actionValue))
             {
-                values["action"] = _routeService.GetActionTranslatedValue(controller, action, currentCulture);
+                values["action"] = _routeService.GetActionTranslatedValue(controllerValue, actionValue, currentCulture);
             }
             
             string path;
             
             var rules = _routeService.RouteRules.Where(r =>
-                r.Controller.Equals(controller, StringComparison.OrdinalIgnoreCase)).ToList();
+                r.ControllerName.Equals(controllerValue, StringComparison.OrdinalIgnoreCase)).ToList();
             
-            var rule = rules.FirstOrDefault(r => r.Action.Equals(action, StringComparison.OrdinalIgnoreCase));
+            var rule = rules.FirstOrDefault(r => r.ActionName.Equals(actionValue, StringComparison.OrdinalIgnoreCase));
             if (rule == null)
             {
-                rule = rules.FirstOrDefault(r => r.Action == null);
+                rule = rules.FirstOrDefault(r => r.ActionName == null);
             }
+
+            var fragment = new FragmentString(urlActionContext.Fragment == null
+                ? null
+                : "#" + urlActionContext.Fragment);
             
             if (rule != null)
             {
-                path = rule.GenerateUrlPath.Invoke(controller, action, values);
+                path = rule.GenerateUrlPathCallback(controllerValue, actionValue, values, AmbientValues, fragment);
             }
             else
             {
@@ -67,9 +71,7 @@ namespace Randstad.Solutions.AspNetCoreRouting.Helpers
                     ActionContext.HttpContext,
                     routeName: null,
                     values,
-                    fragment: new FragmentString(urlActionContext.Fragment == null
-                        ? null
-                        : "#" + urlActionContext.Fragment));
+                    fragment: fragment);
             }
 
             return GenerateUrl(urlActionContext.Protocol, urlActionContext.Host, path);
@@ -143,23 +145,6 @@ namespace Randstad.Solutions.AspNetCoreRouting.Helpers
             }
 
             return action?.ToLower();
-        }
-
-        private string GetParameterValue(RouteValueDictionary values, string parameterName)
-        {
-            string parameter = null;
-
-            if (AmbientValues.TryGetValue(parameterName, out var ambientParameterValue))
-            {
-                parameter = (string)ambientParameterValue;
-            }
-            
-            else if (values.TryGetValue(parameterName, out var parameterValue))
-            {
-                parameter = (string)parameterValue;
-            }
-
-            return parameter;
         }
     }
 }

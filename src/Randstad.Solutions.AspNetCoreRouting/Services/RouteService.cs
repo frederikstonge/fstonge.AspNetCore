@@ -60,7 +60,7 @@ namespace Randstad.Solutions.AspNetCoreRouting.Services
         {
             var actions = GetTranslatedActions();
             var action = actions.Keys.FirstOrDefault(k =>
-                k.Equals($"{controllerName}{actionName}", StringComparison.OrdinalIgnoreCase));
+                k.Equals($"{controllerName}/{actionName}", StringComparison.OrdinalIgnoreCase));
             if (!string.IsNullOrEmpty(action))
             {
                 var attributes = actions[action];
@@ -89,7 +89,7 @@ namespace Randstad.Solutions.AspNetCoreRouting.Services
                                                              a.Value.Equals(translatedName, StringComparison.OrdinalIgnoreCase) &&
                                                              a.Culture.Equals(currentCulture, StringComparison.OrdinalIgnoreCase)));
                 
-                return action.Key.Substring(prefix.Length - 1, action.Key.Length - prefix.Length);
+                return action.Key.Substring(prefix.Length, action.Key.Length - prefix.Length);
             }
 
             return translatedName;
