@@ -39,7 +39,7 @@ namespace Randstad.Solutions.AspNetCoreRouting.Services
             return controllerName;
         }
 
-        public string GetControllerNameFromTranslatedValue(string translatedName, string currentCulture)
+        public string GetControllerName(string translatedName, string currentCulture)
         {
             var controllers = GetTranslatedControllers();
             if (controllers.Any(c => c.Value.Any(a =>
@@ -56,11 +56,11 @@ namespace Randstad.Solutions.AspNetCoreRouting.Services
             return translatedName;
         }
 
-        public string GetActionTranslatedValue(string actionName, string culture)
+        public string GetActionTranslatedValue(string controllerName, string actionName, string culture)
         {
             var actions = GetTranslatedActions();
             var action = actions.Keys.FirstOrDefault(k =>
-                k.Equals(actionName, StringComparison.OrdinalIgnoreCase));
+                k.Equals($"{controllerName}{actionName}", StringComparison.OrdinalIgnoreCase));
             if (!string.IsNullOrEmpty(action))
             {
                 var attributes = actions[action];
@@ -76,18 +76,20 @@ namespace Randstad.Solutions.AspNetCoreRouting.Services
             return actionName;
         }
 
-        public string GetActionNameFromTranslatedValue(string translatedName, string currentCulture)
+        public string GetActionName(string controllerName, string translatedName, string currentCulture)
         {
             var actions = GetTranslatedActions();
             if (actions.Any(c => c.Value.Any(a =>
                 a.Value.Equals(translatedName, StringComparison.OrdinalIgnoreCase) &&
                 a.Culture.Equals(currentCulture, StringComparison.OrdinalIgnoreCase))))
             {
-                var action = actions.FirstOrDefault(c => c.Value.Any(a =>
-                    a.Value.Equals(translatedName, StringComparison.OrdinalIgnoreCase) &&
-                    a.Culture.Equals(currentCulture, StringComparison.OrdinalIgnoreCase)));
+                var prefix = $"{controllerName}/";
+                var action = actions.FirstOrDefault(c => c.Key.StartsWith(prefix, StringComparison.OrdinalIgnoreCase) &&
+                                                         c.Value.Any(a =>
+                                                             a.Value.Equals(translatedName, StringComparison.OrdinalIgnoreCase) &&
+                                                             a.Culture.Equals(currentCulture, StringComparison.OrdinalIgnoreCase)));
                 
-                return action.Key;
+                return action.Key.Substring(prefix.Length - 1, action.Key.Length - prefix.Length);
             }
 
             return translatedName;
@@ -123,7 +125,7 @@ namespace Randstad.Solutions.AspNetCoreRouting.Services
             foreach (var item in items)
             {
                 dictionary.TryAdd(
-                    item.ActionName,
+                    $"{item.ControllerName}/{item.ActionName}",
                     item.MethodInfo.GetCustomAttributes(typeof(TranslateAttribute), true)
                         .OfType<TranslateAttribute>());
             }

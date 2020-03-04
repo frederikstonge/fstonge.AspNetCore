@@ -7,8 +7,8 @@ namespace Randstad.Solutions.AspNetCoreRouting.Services
     {
         List<TranslationRouteRule> RouteRules { get; }
         string GetControllerTranslatedValue(string controllerName, string culture);
-        string GetControllerNameFromTranslatedValue(string translatedName, string currentCulture);
-        string GetActionTranslatedValue(string actionName, string culture);
-        string GetActionNameFromTranslatedValue(string translatedName, string currentCulture);
+        string GetControllerName(string translatedName, string currentCulture);
+        string GetActionTranslatedValue(string controllerName, string actionName, string culture);
+        string GetActionName(string controllerName, string translatedName, string currentCulture);
     }
 }

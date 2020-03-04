@@ -43,7 +43,7 @@ namespace Randstad.Solutions.AspNetCoreRouting.Helpers
             var action = GetActionValue(urlActionContext, values);
             if (!string.IsNullOrEmpty(action))
             {
-                values["action"] = _routeService.GetActionTranslatedValue(action, currentCulture);
+                values["action"] = _routeService.GetActionTranslatedValue(controller, action, currentCulture);
             }
             
             string path;

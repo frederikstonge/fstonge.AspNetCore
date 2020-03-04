@@ -34,10 +34,11 @@ namespace Randstad.Solutions.AspNetCoreRouting.Transformers
             if (culture == "fr" || culture == "en")
             {
                 var controller = (string) values["controller"];
-                values["controller"] = _routeService.GetControllerNameFromTranslatedValue(controller, culture);
+                var controllerName = _routeService.GetControllerName(controller, culture);
+                values["controller"] = controllerName;
 
                 var action = (string) values["action"];
-                values["action"] = _routeService.GetActionNameFromTranslatedValue(action, culture);
+                values["action"] = _routeService.GetActionName(controllerName, action, culture);
             }
 
             return new ValueTask<RouteValueDictionary>(Task.FromResult(values));
