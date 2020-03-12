@@ -9,7 +9,12 @@ namespace Microsoft.AspNetCore.Routing
         {
             if (values.TryGetValue(parameterName, out var parameterValue))
             {
-                return (StringValues)parameterValue;
+                if (parameterValue is StringValues stringValues)
+                {
+                    return stringValues;
+                }
+
+                return new StringValues(parameterValue.ToString());
             }
 
             return default;

@@ -63,7 +63,12 @@ namespace Randstad.Solutions.AspNetCoreRouting.Helpers
             
             if (rule != null)
             {
-                path = rule.GenerateUrlPathCallback(controllerValue, actionValue, values, AmbientValues, fragment);
+                path = rule.GenerateUrlPathCallback(
+                    currentCulture,
+                    _routeService.GetControllerTranslatedValue(controllerValue, currentCulture),
+                    _routeService.GetActionTranslatedValue(controllerValue,actionValue, currentCulture),
+                    values,
+                    fragment);
             }
             else
             {

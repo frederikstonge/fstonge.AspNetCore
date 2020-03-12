@@ -27,10 +27,10 @@ namespace Randstad.Solutions.AspNetCoreRouting.Models
         public GenerateUrlPath GenerateUrlPathCallback { get; }
 
         public delegate string GenerateUrlPath(
+            string culure,
             string controllerValue,
             string actionValue, 
             RouteValueDictionary values,
-            RouteValueDictionary ambiantValues,
             FragmentString fragment);
     }
 }

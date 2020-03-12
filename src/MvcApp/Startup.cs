@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 using Randstad.Solutions.AspNetCoreRouting.Extensions;
 using Randstad.Solutions.AspNetCoreRouting.Models;
@@ -26,13 +27,21 @@ namespace MvcApp
                     new CustomTranslation(
                         "products",
                         "detail",
-                        new RewriteRule[]
+                        new []
                         {
-                            //new RewriteRule("", ""),
+                            new RewriteRule(
+                                @"^([a-zA-Z]{2})\/([^\/]+)\/[-\/a-zA-Z0-9]+\/p-([=._a-zA-Z0-9]+)-.*$", 
+                                "$1/$2/detail/$3"),
                         },
-                        (controllerValue, actionValue, values, ambiantValues, fragment) =>
+                        (culture, controllerValue, actionValue, values, fragment) =>
                         {
-                            return string.Empty;
+                            var id = values.GetParameterValue("id");
+
+                            return $"/{culture}/" +
+                                   $"{controllerValue}/" +
+                                   $"10-control-and-testing/" +
+                                   $"14-testing-string/" +
+                                   $"p-{id}-testing-product-string";
                         }));
             });
         }
