@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Localization;
 using System;
-using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -12,12 +11,12 @@ namespace Randstad.Solutions.AspNetCoreRouting.Providers
     internal class RouteCultureProvider : IRequestCultureProvider
     {
         private readonly CultureInfo _defaultCulture;
-        private readonly CultureInfo _defaultUICulture;
+        private readonly CultureInfo _defaultUiCulture;
 
         public RouteCultureProvider(RequestCulture requestCulture)
         {
             _defaultCulture = requestCulture.Culture;
-            _defaultUICulture = requestCulture.UICulture;
+            _defaultUiCulture = requestCulture.UICulture;
         }
 
         public Task<ProviderCultureResult> DetermineProviderCultureResult(HttpContext httpContext)
@@ -29,8 +28,8 @@ namespace Randstad.Solutions.AspNetCoreRouting.Providers
                 // Set default Culture and default UICulture
                 return Task.FromResult(
                     new ProviderCultureResult(
-                        this._defaultCulture.TwoLetterISOLanguageName
-                        , this._defaultUICulture.TwoLetterISOLanguageName)
+                        _defaultCulture.TwoLetterISOLanguageName
+                        , _defaultUiCulture.TwoLetterISOLanguageName)
                     );
             }
 
@@ -43,8 +42,8 @@ namespace Randstad.Solutions.AspNetCoreRouting.Providers
                 // Set default Culture and default UICulture
                 return Task.FromResult(
                     new ProviderCultureResult(
-                        this._defaultCulture.TwoLetterISOLanguageName
-                        , this._defaultUICulture.TwoLetterISOLanguageName)
+                        _defaultCulture.TwoLetterISOLanguageName
+                        , _defaultUiCulture.TwoLetterISOLanguageName)
                     );
             }
 

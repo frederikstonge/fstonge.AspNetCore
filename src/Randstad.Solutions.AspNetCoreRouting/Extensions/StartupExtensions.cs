@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.IO;
 using System.Linq;
-using System.Reflection;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc.Routing;
@@ -22,10 +20,16 @@ namespace Randstad.Solutions.AspNetCoreRouting.Extensions
 {
     public static class StartupExtensions
     {
-        public static void AddLocalizedRouting(this IApplicationBuilder app, Action<List<CustomTranslation>> translationRouteRules)
+        public static void AddLocalizedRouting(
+            this IApplicationBuilder app, 
+            Action<List<CustomTranslation>> translationRouteRules)
         {
             // Use Request localization
             var locOptions = app.ApplicationServices.GetService<IOptions<RequestLocalizationOptions>>();
+            
+            // Use Endpoints Configuration
+            var supportedLanguages = locOptions.Value.SupportedCultures
+                .Select(c => c.TwoLetterISOLanguageName.ToLower());
             app.UseRequestLocalization(locOptions.Value);
             
             // Use Rewrite rules
@@ -42,10 +46,6 @@ namespace Randstad.Solutions.AspNetCoreRouting.Extensions
             
             app.UseRewriter(rewriteOptions);
 
-            // Use Endpoints Configuration
-            var supportedLanguages = locOptions.Value.SupportedCultures.Select(c => c.TwoLetterISOLanguageName.ToLower());
-            var defaultLanguage = locOptions.Value.DefaultRequestCulture.Culture.TwoLetterISOLanguageName.ToLower();
-            
             app.UseRouting();
             app.UseStaticFiles();
             app.UseEndpoints(endpoints =>
@@ -57,19 +57,35 @@ namespace Randstad.Solutions.AspNetCoreRouting.Extensions
                     {
                         culture = new RegexRouteConstraint($"^({string.Join('|', supportedLanguages)})?$")
                     });
+                
+                endpoints.MapControllerRoute(
+                    name: "default_root_redirection_with_multiple_cultures",
+                    pattern: "{controller=Redirect}/{action=Index}"
+                );
 
                 endpoints.MapDynamicControllerRoute<TranslationTransformer>(
-                    "{culture=" + defaultLanguage + "}/{controller=home}/{action=index}/{*id}");
+                    "{culture}/{controller=home}/{action=index}/{*id}");
             });
         }
 
         public static void AddLocalizedRouting(
             this IServiceCollection services,
-            IEnumerable<string> supportedLanguages,
-            string defaultLanguage, string resourcePath = "Resources")
+            ICollection<string> supportedLanguages,
+            string defaultLanguage, 
+            string resourcePath = "Resources")
         {
+            if (string.IsNullOrEmpty(defaultLanguage) ||
+                supportedLanguages == null ||
+                !supportedLanguages.Contains(defaultLanguage))
+
+            {
+                throw new InvalidOperationException("Supported languages must contain the default language.");
+            }
+            
             // Inject required services
             services.AddRouting();
+            
+            
             services.AddSingleton<IRouteService, RouteService>();
             services.AddSingleton<TranslationTransformer>();
             services.Replace(new ServiceDescriptor(typeof(IUrlHelperFactory), new CustomUrlHelperFactory()));

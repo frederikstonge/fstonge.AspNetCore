@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Primitives;
 
-namespace Microsoft.AspNetCore.Routing
+namespace Randstad.Solutions.AspNetCoreRouting.Extensions
 {
     public static class RouteValueDictionaryExtensions
     {
