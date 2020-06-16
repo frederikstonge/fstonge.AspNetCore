@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
-using Randstad.Solutions.AspNetCoreRouting.Models;
+using SoneparCanada.OpenCatalog.AspNetCoreRouting.Models;
 
-namespace Randstad.Solutions.AspNetCoreRouting.Services
+namespace SoneparCanada.OpenCatalog.AspNetCoreRouting.Services
 {
     internal interface IRouteService
     {

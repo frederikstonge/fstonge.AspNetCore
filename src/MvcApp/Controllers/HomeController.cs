@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Randstad.Solutions.AspNetCoreRouting.Attributes;
+using SoneparCanada.OpenCatalog.AspNetCoreRouting.Attributes;
 
 namespace MvcApp.Controllers
 {

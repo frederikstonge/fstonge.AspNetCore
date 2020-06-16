@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 
-namespace Randstad.Solutions.AspNetCoreRouting.Models
+namespace SoneparCanada.OpenCatalog.AspNetCoreRouting.Models
 {
     public class CustomTranslation
     {

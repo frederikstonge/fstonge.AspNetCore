@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Randstad.Solutions.AspNetCoreRouting.Attributes
+namespace SoneparCanada.OpenCatalog.AspNetCoreRouting.Attributes
 {
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method, AllowMultiple = true)]  
     public class TranslateAttribute : Attribute

@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Randstad.Solutions.AspNetCoreRouting.Controllers
+namespace SoneparCanada.OpenCatalog.AspNetCoreRouting.Controllers
 {
     public sealed class RedirectController : Controller
     {

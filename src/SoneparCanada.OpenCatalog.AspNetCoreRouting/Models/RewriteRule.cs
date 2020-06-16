@@ -1,4 +1,4 @@
-﻿namespace Randstad.Solutions.AspNetCoreRouting.Models
+﻿namespace SoneparCanada.OpenCatalog.AspNetCoreRouting.Models
 {
     public class RewriteRule
     {

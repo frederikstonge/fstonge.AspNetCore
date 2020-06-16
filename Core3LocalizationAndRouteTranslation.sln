@@ -7,7 +7,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{87DB390C-7EA
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MvcApp", "src\MvcApp\MvcApp.csproj", "{E62B31D2-4FDE-49FE-9009-BB34C8ECC73D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Randstad.Solutions.AspNetCoreRouting", "src\Randstad.Solutions.AspNetCoreRouting\Randstad.Solutions.AspNetCoreRouting.csproj", "{4526D9BF-70D6-4726-8571-3C1883E94EE1}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SoneparCanada.OpenCatalog.AspNetCoreRouting", "src\SoneparCanada.OpenCatalog.AspNetCoreRouting\SoneparCanada.OpenCatalog.AspNetCoreRouting.csproj", "{4526D9BF-70D6-4726-8571-3C1883E94EE1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -10,13 +10,13 @@ using Microsoft.AspNetCore.Routing.Constraints;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Options;
-using Randstad.Solutions.AspNetCoreRouting.Factories;
-using Randstad.Solutions.AspNetCoreRouting.Models;
-using Randstad.Solutions.AspNetCoreRouting.Providers;
-using Randstad.Solutions.AspNetCoreRouting.Services;
-using Randstad.Solutions.AspNetCoreRouting.Transformers;
+using SoneparCanada.OpenCatalog.AspNetCoreRouting.Factories;
+using SoneparCanada.OpenCatalog.AspNetCoreRouting.Models;
+using SoneparCanada.OpenCatalog.AspNetCoreRouting.Providers;
+using SoneparCanada.OpenCatalog.AspNetCoreRouting.Services;
+using SoneparCanada.OpenCatalog.AspNetCoreRouting.Transformers;
 
-namespace Randstad.Solutions.AspNetCoreRouting.Extensions
+namespace SoneparCanada.OpenCatalog.AspNetCoreRouting.Extensions
 {
     public static class StartupExtensions
     {

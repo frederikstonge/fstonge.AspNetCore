@@ -4,10 +4,10 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
-using Randstad.Solutions.AspNetCoreRouting.Helpers;
-using Randstad.Solutions.AspNetCoreRouting.Services;
+using SoneparCanada.OpenCatalog.AspNetCoreRouting.Helpers;
+using SoneparCanada.OpenCatalog.AspNetCoreRouting.Services;
 
-namespace Randstad.Solutions.AspNetCoreRouting.Factories
+namespace SoneparCanada.OpenCatalog.AspNetCoreRouting.Factories
 {
     internal class CustomUrlHelperFactory : IUrlHelperFactory
     {

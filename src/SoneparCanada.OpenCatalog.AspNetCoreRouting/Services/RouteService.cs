@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
-using Randstad.Solutions.AspNetCoreRouting.Attributes;
-using Randstad.Solutions.AspNetCoreRouting.Models;
+using SoneparCanada.OpenCatalog.AspNetCoreRouting.Attributes;
+using SoneparCanada.OpenCatalog.AspNetCoreRouting.Models;
 
-namespace Randstad.Solutions.AspNetCoreRouting.Services
+namespace SoneparCanada.OpenCatalog.AspNetCoreRouting.Services
 {
     internal class RouteService : IRouteService
     {

@@ -5,9 +5,10 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.AspNetCore.Routing;
-using Randstad.Solutions.AspNetCoreRouting.Services;
+using SoneparCanada.OpenCatalog.AspNetCoreRouting.Models;
+using SoneparCanada.OpenCatalog.AspNetCoreRouting.Services;
 
-namespace Randstad.Solutions.AspNetCoreRouting.Helpers
+namespace SoneparCanada.OpenCatalog.AspNetCoreRouting.Helpers
 {
     internal class CustomEndpointRoutingUrlHelper : UrlHelperBase
     {
@@ -37,13 +38,13 @@ namespace Randstad.Solutions.AspNetCoreRouting.Helpers
             var controllerValue = GetControllerValue(urlActionContext, values);
             if (!string.IsNullOrEmpty(controllerValue))
             {
-                values["controller"] = _routeService.GetControllerTranslatedValue(controllerValue, currentCulture);
+                values[Constants.ControllerParameterName] = _routeService.GetControllerTranslatedValue(controllerValue, currentCulture);
             }
 
             var actionValue = GetActionValue(urlActionContext, values);
             if (!string.IsNullOrEmpty(actionValue))
             {
-                values["action"] = _routeService.GetActionTranslatedValue(controllerValue, actionValue, currentCulture);
+                values[Constants.ActionParameterName] = _routeService.GetActionTranslatedValue(controllerValue, actionValue, currentCulture);
             }
             
             string path;
@@ -101,22 +102,14 @@ namespace Randstad.Solutions.AspNetCoreRouting.Helpers
         private string GetCurrentCulture(RouteValueDictionary values)
         {
             var currentCulture = CultureInfo.CurrentCulture.TwoLetterISOLanguageName.ToLower();
-            if (AmbientValues.TryGetValue("culture", out var ambiantCulture))
+            if (AmbientValues.TryGetValue(Constants.CultureParameterName, out var ambiantCulture))
             {
-                var ambientCultureString = (string) ambiantCulture;
-                if (ambientCultureString == "fr" || ambientCultureString == "en")
-                {
-                    currentCulture = ambientCultureString;
-                }
+                currentCulture = (string) ambiantCulture;
             }
 
-            if (values.TryGetValue("culture", out var culture))
+            if (values.TryGetValue(Constants.CultureParameterName, out var culture))
             {
-                var cultureString = (string) culture;
-                if (cultureString == "fr" || cultureString == "en")
-                {
-                    currentCulture = cultureString;
-                }
+                currentCulture = (string)culture;
             }
 
             return currentCulture;
@@ -129,7 +122,8 @@ namespace Randstad.Solutions.AspNetCoreRouting.Helpers
             {
                 controller = urlActionContext.Controller;
             }
-            else if (!values.ContainsKey("controller") && AmbientValues.TryGetValue("controller", out var controllerValue))
+            else if (!values.ContainsKey(Constants.ControllerParameterName) && 
+                     AmbientValues.TryGetValue(Constants.ControllerParameterName, out var controllerValue))
             {
                 controller = (string)controllerValue;
             }
@@ -144,7 +138,8 @@ namespace Randstad.Solutions.AspNetCoreRouting.Helpers
             {
                 action = urlActionContext.Action;
             }
-            else if (!values.ContainsKey("action") && AmbientValues.TryGetValue("action", out var actionValue))
+            else if (!values.ContainsKey(Constants.ActionParameterName) && 
+                     AmbientValues.TryGetValue(Constants.ActionParameterName, out var actionValue))
             {
                 action = (string)actionValue;
             }
