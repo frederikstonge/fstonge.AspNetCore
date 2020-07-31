@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace SoneparCanada.OpenCatalog.AspNetCoreRouting.Attributes
+namespace AspNetCore.Routing.Translation.Attributes
 {
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method, AllowMultiple = true)]  
     public class TranslateAttribute : Attribute

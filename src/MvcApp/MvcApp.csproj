@@ -9,7 +9,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\SoneparCanada.OpenCatalog.AspNetCoreRouting\SoneparCanada.OpenCatalog.AspNetCoreRouting.csproj" />
+    <ProjectReference Include="..\AspNetCore.Routing.Translation\AspNetCore.Routing.Translation.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,5 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
-using SoneparCanada.OpenCatalog.AspNetCoreRouting.Attributes;
+using AspNetCore.Routing.Translation.Attributes;
 
 namespace MvcApp.Controllers
 {

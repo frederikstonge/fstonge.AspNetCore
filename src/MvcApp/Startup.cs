@@ -1,8 +1,8 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
-using SoneparCanada.OpenCatalog.AspNetCoreRouting.Extensions;
-using SoneparCanada.OpenCatalog.AspNetCoreRouting.Models;
+using AspNetCore.Routing.Translation.Extensions;
+using AspNetCore.Routing.Translation.Models;
 
 namespace MvcApp
 {
@@ -19,29 +19,7 @@ namespace MvcApp
 
         public void Configure(IApplicationBuilder app)
         {
-            app.AddLocalizedRouting(d =>
-            {
-                d.Add(
-                    new CustomTranslation(
-                        "products",
-                        "detail",
-                        new []
-                        {
-                            new RewriteRule(
-                                @"^([a-zA-Z]{2})\/([^\/]+)\/[-\/a-zA-Z0-9]+\/p-([=._a-zA-Z0-9]+)-.*$", 
-                                "$1/$2/detail/$3"),
-                        },
-                        (culture, controllerValue, actionValue, values, fragment) =>
-                        {
-                            var id = values.GetParameterValue("id");
-
-                            return $"/{culture}/" +
-                                   $"{controllerValue}/" +
-                                   $"10-control-and-testing/" +
-                                   $"14-testing-string/" +
-                                   $"p-{id}-testing-product-string";
-                        }));
-            });
+            app.ConfigureLocalizedRouting();
         }
     }
 }

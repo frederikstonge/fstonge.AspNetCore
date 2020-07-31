@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
-using SoneparCanada.OpenCatalog.AspNetCoreRouting.Models;
+using AspNetCore.Routing.Translation.Models;
 
-namespace SoneparCanada.OpenCatalog.AspNetCoreRouting.Services
+namespace AspNetCore.Routing.Translation.Services
 {
     internal interface IRouteService
     {
-        List<CustomTranslation> RouteRules { get; }
+        List<ICustomTranslation> RouteRules { get; }
         string GetControllerTranslatedValue(string controllerName, string culture);
         string GetControllerName(string translatedName, string currentCulture);
         string GetActionTranslatedValue(string controllerName, string actionName, string culture);

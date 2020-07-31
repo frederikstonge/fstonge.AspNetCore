@@ -1,13 +1,13 @@
 ﻿using System;
+using AspNetCore.Routing.Translation.Helpers;
+using AspNetCore.Routing.Translation.Services;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
-using SoneparCanada.OpenCatalog.AspNetCoreRouting.Helpers;
-using SoneparCanada.OpenCatalog.AspNetCoreRouting.Services;
 
-namespace SoneparCanada.OpenCatalog.AspNetCoreRouting.Factories
+namespace AspNetCore.Routing.Translation.Factories
 {
     internal class CustomUrlHelperFactory : IUrlHelperFactory
     {

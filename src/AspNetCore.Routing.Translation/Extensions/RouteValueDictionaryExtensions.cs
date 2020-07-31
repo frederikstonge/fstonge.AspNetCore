@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Primitives;
 
-namespace SoneparCanada.OpenCatalog.AspNetCoreRouting.Extensions
+namespace AspNetCore.Routing.Translation.Extensions
 {
     public static class RouteValueDictionaryExtensions
     {

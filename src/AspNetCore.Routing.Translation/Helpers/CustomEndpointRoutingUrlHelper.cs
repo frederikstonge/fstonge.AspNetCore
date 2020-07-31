@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Globalization;
 using System.Linq;
+using AspNetCore.Routing.Translation.Models;
+using AspNetCore.Routing.Translation.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.AspNetCore.Routing;
-using SoneparCanada.OpenCatalog.AspNetCoreRouting.Models;
-using SoneparCanada.OpenCatalog.AspNetCoreRouting.Services;
 
-namespace SoneparCanada.OpenCatalog.AspNetCoreRouting.Helpers
+namespace AspNetCore.Routing.Translation.Helpers
 {
     internal class CustomEndpointRoutingUrlHelper : UrlHelperBase
     {
@@ -46,7 +46,16 @@ namespace SoneparCanada.OpenCatalog.AspNetCoreRouting.Helpers
             {
                 values[Constants.ActionParameterName] = _routeService.GetActionTranslatedValue(controllerValue, actionValue, currentCulture);
             }
-            
+
+            if (urlActionContext.Controller == null && urlActionContext.Action == null)
+            {
+                if (AmbientValues.ContainsKey(Constants.IdParameterName) && 
+                    AmbientValues.TryGetValue(Constants.IdParameterName, out var id))
+                {
+                    values[Constants.IdParameterName] = id;
+                }
+            }
+
             string path;
             
             var rules = _routeService.RouteRules.Where(r =>

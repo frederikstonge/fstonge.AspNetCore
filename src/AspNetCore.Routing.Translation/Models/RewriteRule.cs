@@ -1,4 +1,4 @@
-﻿namespace SoneparCanada.OpenCatalog.AspNetCoreRouting.Models
+﻿namespace AspNetCore.Routing.Translation.Models
 {
     public class RewriteRule
     {

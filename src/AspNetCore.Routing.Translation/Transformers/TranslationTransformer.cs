@@ -1,13 +1,13 @@
 using System.Reflection.Metadata;
 using System.Threading.Tasks;
+using AspNetCore.Routing.Translation.Models;
+using AspNetCore.Routing.Translation.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.AspNetCore.Routing;
-using SoneparCanada.OpenCatalog.AspNetCoreRouting.Models;
-using SoneparCanada.OpenCatalog.AspNetCoreRouting.Services;
 
-namespace SoneparCanada.OpenCatalog.AspNetCoreRouting.Transformers
+namespace AspNetCore.Routing.Translation.Transformers
 {
     internal class TranslationTransformer : DynamicRouteValueTransformer
     {

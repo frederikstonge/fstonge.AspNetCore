@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
-namespace SoneparCanada.OpenCatalog.AspNetCoreRouting.Providers
+namespace AspNetCore.Routing.Translation.Providers
 {
     internal class RouteCultureProvider : IRequestCultureProvider
     {

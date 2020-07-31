@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using AspNetCore.Routing.Translation.Attributes;
+using AspNetCore.Routing.Translation.Models;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
-using SoneparCanada.OpenCatalog.AspNetCoreRouting.Attributes;
-using SoneparCanada.OpenCatalog.AspNetCoreRouting.Models;
 
-namespace SoneparCanada.OpenCatalog.AspNetCoreRouting.Services
+namespace AspNetCore.Routing.Translation.Services
 {
     internal class RouteService : IRouteService
     {
@@ -17,7 +17,7 @@ namespace SoneparCanada.OpenCatalog.AspNetCoreRouting.Services
             _actionDescriptorCollectionProvider = actionDescriptorCollectionProvider;
         }
         
-        public List<CustomTranslation> RouteRules { get; } = new List<CustomTranslation>();
+        public List<ICustomTranslation> RouteRules { get; } = new List<ICustomTranslation>();
 
         public string GetControllerTranslatedValue(string controllerName, string culture)
         {
