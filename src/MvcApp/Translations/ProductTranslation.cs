@@ -1,7 +1,7 @@
 ﻿using AspNetCore.Routing.Translation.Extensions;
 using AspNetCore.Routing.Translation.Models;
 
-namespace MvcApp
+namespace MvcApp.Translations
 {
     public class ProductTranslation : ICustomTranslation
     {
