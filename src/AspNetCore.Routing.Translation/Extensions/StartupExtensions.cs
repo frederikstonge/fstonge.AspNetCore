@@ -23,11 +23,22 @@ namespace AspNetCore.Routing.Translation.Extensions
 {
     public static class StartupExtensions
     {
+        /// <summary>
+        /// Add filter to set culture in cookies
+        /// </summary>
+        /// <param name="options">MvcOptions from AddControllersWithViews</param>
         public static void AddCultureCookieFilter(this MvcOptions options)
         {
             options.Filters.Add<SetCultureCookieActionFilter>();
         }
         
+        /// <summary>
+        /// Inject required services, add routing and replace current UrlHelperFactory
+        /// </summary>
+        /// <param name="services">Service collection</param>
+        /// <param name="supportedLanguages">List of supported languages</param>
+        /// <param name="defaultLanguage">The default language</param>
+        /// <exception cref="InvalidOperationException">Supported languages must contain the default language.</exception>
         public static void AddRoutingLocalization(
             this IServiceCollection services,
             ICollection<string> supportedLanguages,
@@ -47,14 +58,6 @@ namespace AspNetCore.Routing.Translation.Extensions
             services.AddSingleton<TranslationTransformer>();
             services.Replace(new ServiceDescriptor(typeof(IUrlHelperFactory), new CustomUrlHelperFactory()));
 
-            var customTranslations = Assembly.GetCallingAssembly().GetTypes()
-                .Where(type => type.GetInterfaces().Contains(typeof(ICustomTranslation)));
-
-            foreach (var customTranslation in customTranslations)
-            {
-                services.AddSingleton(typeof(ICustomTranslation), customTranslation);
-            }
-
             // Setup Request localization
             services.Configure<RequestLocalizationOptions>(options =>
             {
@@ -70,35 +73,45 @@ namespace AspNetCore.Routing.Translation.Extensions
             });
         }
 
-        public static void UseRoutingLocalization(
-            this IApplicationBuilder app)
+        /// <summary>
+        /// Setup Request localization, Rewriter and Routing
+        /// </summary>
+        /// <param name="app">Application builder</param>
+        public static void UseRoutingLocalization(this IApplicationBuilder app)
         {
             // Use Request localization
             var locOptions = app.ApplicationServices.GetRequiredService<IOptions<RequestLocalizationOptions>>();
-            var translationRouteRules = app.ApplicationServices.GetServices<ICustomTranslation>();
             app.UseRequestLocalization(locOptions.Value);
 
-            // Use Rewrite rules
-            var routeService = app.ApplicationServices.GetRequiredService<IRouteService>();
-            routeService.RouteRules.AddRange(translationRouteRules);
-
-            var rewriteOptions = new RewriteOptions();
-            foreach (var routeRule in routeService.RouteRules)
+            var translationRouteRules = app.ApplicationServices.GetServices<ICustomTranslation>().ToList();
+            if (translationRouteRules.Any())
             {
-                foreach (var rewriteRule in routeRule.RewriteRules)
+                // Use Rewrite rules
+                var routeService = app.ApplicationServices.GetRequiredService<IRouteService>();
+                routeService.RouteRules.AddRange(translationRouteRules);
+
+                var rewriteOptions = new RewriteOptions();
+                foreach (var routeRule in routeService.RouteRules)
                 {
-                    rewriteOptions.AddRewrite(rewriteRule.Regex, rewriteRule.Replacement,
-                        rewriteRule.SkipRemainingRules);
+                    foreach (var rewriteRule in routeRule.RewriteRules)
+                    {
+                        rewriteOptions.AddRewrite(rewriteRule.Regex, rewriteRule.Replacement,
+                            rewriteRule.SkipRemainingRules);
+                    }
                 }
+
+                app.UseRewriter(rewriteOptions);
             }
 
-            app.UseRewriter(rewriteOptions);
             app.UseRouting();
         }
         
-        
-        public static void UseEndpointsLocalization(
-            this IApplicationBuilder app, string[] supportedLanguages)
+        /// <summary>
+        /// Preset the UseEndpoints with correct routes for culture
+        /// </summary>
+        /// <param name="app">Application builder</param>
+        /// <param name="supportedLanguages">List of supported languages</param>
+        public static void UseEndpointsLocalization(this IApplicationBuilder app, string[] supportedLanguages)
         {
             app.UseEndpoints(endpoints =>
             {
