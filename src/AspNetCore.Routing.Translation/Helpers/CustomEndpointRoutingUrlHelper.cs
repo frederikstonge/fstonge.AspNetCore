@@ -34,25 +34,29 @@ namespace AspNetCore.Routing.Translation.Helpers
 
             var values = GetValuesDictionary(urlActionContext.Values);
             var currentCulture = GetCultureValue(values);
+            if (!string.IsNullOrEmpty(currentCulture))
+            {
+                values[RouteValue.Culture] = currentCulture;
+            }
 
             var controllerValue = GetControllerValue(urlActionContext, values);
             if (!string.IsNullOrEmpty(controllerValue))
             {
-                values[Constants.ControllerParameterName] = _routeService.GetControllerTranslatedValue(controllerValue, currentCulture);
+                values[RouteValue.Controller] = _routeService.GetControllerTranslatedValue(controllerValue, currentCulture);
             }
 
             var actionValue = GetActionValue(urlActionContext, values);
             if (!string.IsNullOrEmpty(actionValue))
             {
-                values[Constants.ActionParameterName] = _routeService.GetActionTranslatedValue(controllerValue, actionValue, currentCulture);
+                values[RouteValue.Action] = _routeService.GetActionTranslatedValue(controllerValue, actionValue, currentCulture);
             }
 
             if (urlActionContext.Controller == null && urlActionContext.Action == null)
             {
-                if (AmbientValues.ContainsKey(Constants.IdParameterName) && 
-                    AmbientValues.TryGetValue(Constants.IdParameterName, out var id))
+                if (AmbientValues.ContainsKey(RouteValue.Id) && 
+                    AmbientValues.TryGetValue(RouteValue.Id, out var id))
                 {
-                    values[Constants.IdParameterName] = id;
+                    values[RouteValue.Id] = id;
                 }
             }
 
@@ -74,9 +78,6 @@ namespace AspNetCore.Routing.Translation.Helpers
             if (rule != null)
             {
                 path = rule.GenerateUrlPathCallback(
-                    currentCulture,
-                    _routeService.GetControllerTranslatedValue(controllerValue, currentCulture),
-                    _routeService.GetActionTranslatedValue(controllerValue,actionValue, currentCulture),
                     values,
                     fragment);
             }
@@ -113,12 +114,12 @@ namespace AspNetCore.Routing.Translation.Helpers
         private string GetCultureValue(RouteValueDictionary values)
         {
             var currentCulture = CultureInfo.CurrentCulture.TwoLetterISOLanguageName.ToLower();
-            if (AmbientValues.TryGetValue(Constants.CultureParameterName, out var ambiantCulture))
+            if (AmbientValues.TryGetValue(RouteValue.Culture, out var ambiantCulture))
             {
                 currentCulture = (string) ambiantCulture;
             }
 
-            if (values.TryGetValue(Constants.CultureParameterName, out var culture))
+            if (values.TryGetValue(RouteValue.Culture, out var culture))
             {
                 currentCulture = (string)culture;
             }
@@ -133,8 +134,8 @@ namespace AspNetCore.Routing.Translation.Helpers
             {
                 controller = urlActionContext.Controller;
             }
-            else if (!values.ContainsKey(Constants.ControllerParameterName) && 
-                     AmbientValues.TryGetValue(Constants.ControllerParameterName, out var controllerValue))
+            else if (!values.ContainsKey(RouteValue.Controller) && 
+                     AmbientValues.TryGetValue(RouteValue.Controller, out var controllerValue))
             {
                 controller = (string)controllerValue;
             }
@@ -149,8 +150,8 @@ namespace AspNetCore.Routing.Translation.Helpers
             {
                 action = urlActionContext.Action;
             }
-            else if (!values.ContainsKey(Constants.ActionParameterName) && 
-                     AmbientValues.TryGetValue(Constants.ActionParameterName, out var actionValue))
+            else if (!values.ContainsKey(RouteValue.Action) && 
+                     AmbientValues.TryGetValue(RouteValue.Action, out var actionValue))
             {
                 action = (string)actionValue;
             }

@@ -11,9 +11,6 @@ namespace AspNetCore.Routing.Translation.Models
         GenerateUrlPath GenerateUrlPathCallback { get; }
         
         public delegate string GenerateUrlPath(
-            string culure,
-            string controllerValue,
-            string actionValue, 
             RouteValueDictionary values,
             FragmentString fragment);
     }

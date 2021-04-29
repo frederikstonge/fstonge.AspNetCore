@@ -18,26 +18,25 @@ namespace AspNetCore.Routing.Translation.Transformers
         
         public override ValueTask<RouteValueDictionary> TransformAsync(HttpContext httpContext, RouteValueDictionary values)
         {
-            if (!values.ContainsKey(Constants.ControllerParameterName) || !values.ContainsKey(Constants.ActionParameterName))
+            if (!values.ContainsKey(RouteValue.Controller) || !values.ContainsKey(RouteValue.Action))
             {
                 return new ValueTask<RouteValueDictionary>(Task.FromResult(values));
             }
             
-            if (!values.ContainsKey(Constants.CultureParameterName))
+            if (!values.ContainsKey(RouteValue.Culture))
             {
                 var rqf = httpContext.Request.HttpContext.Features.Get<IRequestCultureFeature>();
-                values[Constants.CultureParameterName] = rqf.RequestCulture.Culture.TwoLetterISOLanguageName.ToLower();
+                values[RouteValue.Culture] = rqf.RequestCulture.Culture.TwoLetterISOLanguageName.ToLower();
             }
 
-            var culture = (string)values[Constants.CultureParameterName];
-            var controller = (string) values[Constants.ControllerParameterName];
+            var culture = (string)values[RouteValue.Culture];
+            var controller = (string) values[RouteValue.Controller];
             var controllerName = _routeService.GetControllerName(controller, culture);
-            values[Constants.ControllerParameterName] = controllerName;
+            values[RouteValue.Controller] = controllerName;
 
-            var action = (string) values[Constants.ActionParameterName];
-            values[Constants.ActionParameterName] = _routeService.GetActionName(controllerName, action, culture);
-
-                return new ValueTask<RouteValueDictionary>(Task.FromResult(values));
+            var action = (string) values[RouteValue.Action];
+            values[RouteValue.Action] = _routeService.GetActionName(controllerName, action, culture);
+            return new ValueTask<RouteValueDictionary>(Task.FromResult(values));
         }
     }
 }

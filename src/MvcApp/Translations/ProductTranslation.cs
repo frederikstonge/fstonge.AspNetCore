@@ -17,15 +17,13 @@ namespace MvcApp.Translations
         };
         
         public ICustomTranslation.GenerateUrlPath GenerateUrlPathCallback => 
-            (culture, controllerValue, _, values, _) =>
+            (values, _) =>
         {
-            var id = values.GetParameterValue("id");
-
-            return $"/{culture}/" +
-                   $"{controllerValue}/" + 
+            return $"/{values.GetParameterValue(RouteValue.Culture)}/" +
+                   $"{values.GetParameterValue(RouteValue.Controller)}/" + 
                    $"10-control-and-testing/" +
                    $"14-testing-string/" +
-                   $"p-{id}-testing-product-string";
+                   $"p-{values.GetParameterValue(RouteValue.Id)}-testing-product-string";
         };
     }
 }
