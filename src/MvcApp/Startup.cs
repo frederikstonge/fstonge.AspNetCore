@@ -2,10 +2,7 @@ using System;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using AspNetCore.Routing.Translation.Extensions;
-using AspNetCore.Routing.Translation.Filters;
-using AspNetCore.Routing.Translation.Transformers;
 using Microsoft.AspNetCore.Mvc.Razor;
-using Microsoft.AspNetCore.Routing.Constraints;
 using Microsoft.Extensions.Configuration;
 using MvcApp.Filters;
 
@@ -26,7 +23,7 @@ namespace MvcApp
         {
             var builder = services.AddControllersWithViews(options =>
             {
-                options.Filters.Add<SetCultureCookieActionFilter>();
+                options.AddCultureCookieFilter();
                 options.Filters.Add<SetLanguageActionFilter>();
             });
             
@@ -34,15 +31,15 @@ namespace MvcApp
             builder.AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix);
             builder.AddDataAnnotationsLocalization();
             
-            services.AddLocalizedRouting(_supportedLanguages, _defaultLanguage);
+            services.AddRoutingLocalization(_supportedLanguages, _defaultLanguage);
             
         }
 
         public void Configure(IApplicationBuilder app)
         {
-            app.UseLocalizedRouting();
+            app.UseRoutingLocalization();
             app.UseStaticFiles();
-            app.UseLocalizedEndpoints(_supportedLanguages);
+            app.UseEndpointsLocalization(_supportedLanguages);
         }
     }
 }

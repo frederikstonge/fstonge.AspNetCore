@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Routing;
 
 namespace AspNetCore.Routing.Translation.Transformers
 {
-    public class TranslationTransformer : DynamicRouteValueTransformer
+    internal class TranslationTransformer : DynamicRouteValueTransformer
     {
         private readonly IRouteService _routeService;
         public TranslationTransformer(IRouteService routeService)

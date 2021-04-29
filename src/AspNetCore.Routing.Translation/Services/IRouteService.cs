@@ -3,7 +3,7 @@ using AspNetCore.Routing.Translation.Models;
 
 namespace AspNetCore.Routing.Translation.Services
 {
-    public interface IRouteService
+    internal interface IRouteService
     {
         List<ICustomTranslation> RouteRules { get; }
         string GetControllerTranslatedValue(string controllerName, string culture);

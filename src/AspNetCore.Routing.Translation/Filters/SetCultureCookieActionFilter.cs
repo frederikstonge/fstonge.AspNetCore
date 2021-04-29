@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace AspNetCore.Routing.Translation.Filters
 {
-    public class SetCultureCookieActionFilter : IActionFilter
+    internal class SetCultureCookieActionFilter : IActionFilter
     {
         public void OnActionExecuting(ActionExecutingContext context)
         {

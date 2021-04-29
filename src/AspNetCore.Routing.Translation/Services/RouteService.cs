@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc.Infrastructure;
 
 namespace AspNetCore.Routing.Translation.Services
 {
-    public class RouteService : IRouteService
+    internal class RouteService : IRouteService
     {
         private readonly IActionDescriptorCollectionProvider _actionDescriptorCollectionProvider;
 

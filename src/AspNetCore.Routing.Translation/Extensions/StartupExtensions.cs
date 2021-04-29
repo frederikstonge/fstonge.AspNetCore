@@ -4,12 +4,14 @@ using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using AspNetCore.Routing.Translation.Factories;
+using AspNetCore.Routing.Translation.Filters;
 using AspNetCore.Routing.Translation.Models;
 using AspNetCore.Routing.Translation.Providers;
 using AspNetCore.Routing.Translation.Services;
 using AspNetCore.Routing.Translation.Transformers;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Localization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.AspNetCore.Rewrite;
 using Microsoft.AspNetCore.Routing.Constraints;
@@ -21,7 +23,12 @@ namespace AspNetCore.Routing.Translation.Extensions
 {
     public static class StartupExtensions
     {
-        public static void AddLocalizedRouting(
+        public static void AddCultureCookieFilter(this MvcOptions options)
+        {
+            options.Filters.Add<SetCultureCookieActionFilter>();
+        }
+        
+        public static void AddRoutingLocalization(
             this IServiceCollection services,
             ICollection<string> supportedLanguages,
             string defaultLanguage)
@@ -63,7 +70,7 @@ namespace AspNetCore.Routing.Translation.Extensions
             });
         }
 
-        public static void UseLocalizedRouting(
+        public static void UseRoutingLocalization(
             this IApplicationBuilder app)
         {
             // Use Request localization
@@ -90,7 +97,7 @@ namespace AspNetCore.Routing.Translation.Extensions
         }
         
         
-        public static void UseLocalizedEndpoints(
+        public static void UseEndpointsLocalization(
             this IApplicationBuilder app, string[] supportedLanguages)
         {
             app.UseEndpoints(endpoints =>
