@@ -1,8 +1,6 @@
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using AspNetCore.Routing.Translation.Extensions;
-using AspNetCore.Routing.Translation.Models;
 
 namespace MvcApp
 {
@@ -10,8 +8,7 @@ namespace MvcApp
     {
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc()
-                .SetCompatibilityVersion(CompatibilityVersion.Latest);
+            services.AddControllersWithViews();
 
             var languages = new[] {"fr", "en"};
             services.AddLocalizedRouting(languages, "fr");
@@ -19,7 +16,7 @@ namespace MvcApp
 
         public void Configure(IApplicationBuilder app)
         {
-            app.ConfigureLocalizedRouting();
+            app.UseLocalizedRoutingEndpoints();
         }
     }
 }

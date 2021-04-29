@@ -14,7 +14,7 @@ namespace AspNetCore.Routing.Translation.Extensions
                     return stringValues;
                 }
 
-                return new StringValues(parameterValue.ToString());
+                return new StringValues(parameterValue?.ToString());
             }
 
             return default;

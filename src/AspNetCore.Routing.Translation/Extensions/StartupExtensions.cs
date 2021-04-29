@@ -21,12 +21,11 @@ namespace AspNetCore.Routing.Translation.Extensions
 {
     public static class StartupExtensions
     {
-        public static void ConfigureLocalizedRouting(
+        public static void UseLocalizedRoutingEndpoints(
             this IApplicationBuilder app)
         {
             // Use Request localization
-            var locOptions = app.ApplicationServices.GetService<IOptions<RequestLocalizationOptions>>();
-
+            var locOptions = app.ApplicationServices.GetRequiredService<IOptions<RequestLocalizationOptions>>();
             var translationRouteRules = app.ApplicationServices.GetServices<ICustomTranslation>();
 
             // Use Endpoints Configuration

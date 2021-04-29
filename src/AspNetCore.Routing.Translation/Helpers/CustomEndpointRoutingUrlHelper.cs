@@ -33,7 +33,7 @@ namespace AspNetCore.Routing.Translation.Helpers
             }
 
             var values = GetValuesDictionary(urlActionContext.Values);
-            var currentCulture = GetCurrentCulture(values);
+            var currentCulture = GetCultureValue(values);
 
             var controllerValue = GetControllerValue(urlActionContext, values);
             if (!string.IsNullOrEmpty(controllerValue))
@@ -67,9 +67,9 @@ namespace AspNetCore.Routing.Translation.Helpers
                 rule = rules.FirstOrDefault(r => r.ActionName == null);
             }
 
-            var fragment = new FragmentString(urlActionContext.Fragment == null
-                ? null
-                : "#" + urlActionContext.Fragment);
+            var fragment = urlActionContext.Fragment == null
+                ? FragmentString.Empty
+                : new FragmentString("#" + urlActionContext.Fragment);
             
             if (rule != null)
             {
@@ -89,6 +89,8 @@ namespace AspNetCore.Routing.Translation.Helpers
                     fragment: fragment);
             }
 
+            
+            
             return GenerateUrl(urlActionContext.Protocol, urlActionContext.Host, path);
         }
 
@@ -103,12 +105,12 @@ namespace AspNetCore.Routing.Translation.Helpers
                 ActionContext.HttpContext,
                 routeContext.RouteName,
                 routeContext.Values,
-                fragment: new FragmentString(routeContext.Fragment == null ? null : "#" + routeContext.Fragment));
+                fragment: routeContext.Fragment == null ? FragmentString.Empty : new FragmentString("#" + routeContext.Fragment));
 
             return GenerateUrl(routeContext.Protocol, routeContext.Host, path);
         }
 
-        private string GetCurrentCulture(RouteValueDictionary values)
+        private string GetCultureValue(RouteValueDictionary values)
         {
             var currentCulture = CultureInfo.CurrentCulture.TwoLetterISOLanguageName.ToLower();
             if (AmbientValues.TryGetValue(Constants.CultureParameterName, out var ambiantCulture))
