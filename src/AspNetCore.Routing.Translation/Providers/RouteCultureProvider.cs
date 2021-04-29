@@ -3,12 +3,11 @@ using Microsoft.AspNetCore.Localization;
 using System;
 using System.Globalization;
 using System.Linq;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace AspNetCore.Routing.Translation.Providers
 {
-    internal class RouteCultureProvider : RequestCultureProvider
+    public class RouteCultureProvider : RequestCultureProvider
     {
         private readonly CultureInfo _defaultCulture;
         private readonly CultureInfo _defaultUiCulture;
