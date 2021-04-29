@@ -2,7 +2,6 @@ using System.Threading.Tasks;
 using AspNetCore.Routing.Translation.Models;
 using AspNetCore.Routing.Translation.Services;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.AspNetCore.Routing;
 
@@ -22,14 +21,9 @@ namespace AspNetCore.Routing.Translation.Transformers
             {
                 return new ValueTask<RouteValueDictionary>(Task.FromResult(values));
             }
-            
-            if (!values.ContainsKey(RouteValue.Culture))
-            {
-                var rqf = httpContext.Request.HttpContext.Features.Get<IRequestCultureFeature>();
-                values[RouteValue.Culture] = rqf.RequestCulture.Culture.TwoLetterISOLanguageName.ToLower();
-            }
 
             var culture = (string)values[RouteValue.Culture];
+            
             var controller = (string) values[RouteValue.Controller];
             var controllerName = _routeService.GetControllerName(controller, culture);
             values[RouteValue.Controller] = controllerName;

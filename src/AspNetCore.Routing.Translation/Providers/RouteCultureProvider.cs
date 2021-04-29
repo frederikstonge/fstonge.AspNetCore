@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace AspNetCore.Routing.Translation.Providers
 {
-    internal class RouteCultureProvider : IRequestCultureProvider
+    internal class RouteCultureProvider : RequestCultureProvider
     {
         private readonly CultureInfo _defaultCulture;
         private readonly CultureInfo _defaultUiCulture;
@@ -19,36 +19,47 @@ namespace AspNetCore.Routing.Translation.Providers
             _defaultUiCulture = requestCulture.UICulture;
         }
 
-        public Task<ProviderCultureResult> DetermineProviderCultureResult(HttpContext httpContext)
+        public override async Task<ProviderCultureResult> DetermineProviderCultureResult(HttpContext httpContext)
         {
-            var parts = httpContext.Request.Path.Value.Split('/', StringSplitOptions.RemoveEmptyEntries);
-            // Test any culture in route
-            if (!parts.Any())
+            if (httpContext == null)
             {
-                // Set default Culture and default UICulture
-                return Task.FromResult(
-                    new ProviderCultureResult(
-                        _defaultCulture.TwoLetterISOLanguageName
-                        , _defaultUiCulture.TwoLetterISOLanguageName)
-                    );
+                throw new ArgumentNullException(nameof(httpContext));
             }
 
+            if (httpContext.Request.Path.Value != null)
+            {
+                var parts = httpContext.Request.Path.Value.Split('/', StringSplitOptions.RemoveEmptyEntries);
+
+                // Test any culture in route
+                if (!parts.Any())
+                {
+                    // Set default Culture and default UICulture
+                    return await Task.FromResult(
+                        new ProviderCultureResult(
+                            _defaultCulture.TwoLetterISOLanguageName
+                            , _defaultUiCulture.TwoLetterISOLanguageName)
+                    );
+                }
+
+
+                var culture = parts.First();
+
+                // Test if the culture is properly formatted
+                if (!Regex.IsMatch(culture, @"^[a-z]{2}(-[A-Z]{2})*$"))
+                {
+                    // Set default Culture and default UICulture
+                    return await Task.FromResult(
+                        new ProviderCultureResult(
+                            _defaultCulture.TwoLetterISOLanguageName
+                            , _defaultUiCulture.TwoLetterISOLanguageName)
+                    );
+                }
+
+                // Set Culture and UICulture from route culture parameter
+                return await Task.FromResult(new ProviderCultureResult(culture, culture));
+            }
             
-            var culture = parts.First();
-
-            // Test if the culture is properly formatted
-            if (!Regex.IsMatch(culture, @"^[a-z]{2}(-[A-Z]{2})*$"))
-            {
-                // Set default Culture and default UICulture
-                return Task.FromResult(
-                    new ProviderCultureResult(
-                        _defaultCulture.TwoLetterISOLanguageName
-                        , _defaultUiCulture.TwoLetterISOLanguageName)
-                    );
-            }
-
-            // Set Culture and UICulture from route culture parameter
-            return Task.FromResult(new ProviderCultureResult(culture, culture));
+            return await NullProviderCultureResult;
         }
     }
 }
