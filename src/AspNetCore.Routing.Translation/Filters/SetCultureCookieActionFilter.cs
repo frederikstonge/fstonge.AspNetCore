@@ -1,15 +1,16 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace AspNetCore.Routing.Translation.Filters
 {
-    internal class SetCultureCookieActionFilter : IActionFilter
+    internal class SetCultureCookieActionFilter : IAsyncActionFilter
     {
-        public void OnActionExecuting(ActionExecutingContext context)
+        public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
         {
-             var rqf = context.HttpContext.Request.HttpContext.Features.Get<IRequestCultureFeature>();
+            var rqf = context.HttpContext.Request.HttpContext.Features.Get<IRequestCultureFeature>();
             var culture = rqf.RequestCulture.Culture.TwoLetterISOLanguageName;
             context.HttpContext.Response.Cookies.Append(
                 CookieRequestCultureProvider.DefaultCookieName,
@@ -21,10 +22,8 @@ namespace AspNetCore.Routing.Translation.Filters
                     Secure = true,
                     IsEssential = true
                 });
-        }
 
-        public void OnActionExecuted(ActionExecutedContext context)
-        {
+            await next();
         }
     }
 }
