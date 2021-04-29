@@ -8,15 +8,17 @@ namespace MvcApp
     {
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllersWithViews();
-
+            services.AddControllersWithViewsAndCulture();
+            
             var languages = new[] {"fr", "en"};
             services.AddLocalizedRouting(languages, "fr");
         }
 
         public void Configure(IApplicationBuilder app)
         {
-            app.UseLocalizedRoutingEndpoints();
+            app.UseLocalizedRouting();
+            app.UseStaticFiles();
+            app.UseLocalizedEndpoints();
         }
     }
 }

@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using AspNetCore.Routing.Translation.Factories;
+using AspNetCore.Routing.Translation.Filters;
 using AspNetCore.Routing.Translation.Models;
 using AspNetCore.Routing.Translation.Providers;
 using AspNetCore.Routing.Translation.Services;
@@ -21,54 +22,9 @@ namespace AspNetCore.Routing.Translation.Extensions
 {
     public static class StartupExtensions
     {
-        public static void UseLocalizedRoutingEndpoints(
-            this IApplicationBuilder app)
+        public static void AddControllersWithViewsAndCulture(this IServiceCollection services)
         {
-            // Use Request localization
-            var locOptions = app.ApplicationServices.GetRequiredService<IOptions<RequestLocalizationOptions>>();
-            var translationRouteRules = app.ApplicationServices.GetServices<ICustomTranslation>();
-
-            // Use Endpoints Configuration
-            var supportedLanguages = locOptions.Value.SupportedCultures
-                .Select(c => c.TwoLetterISOLanguageName.ToLower());
-            app.UseRequestLocalization(locOptions.Value);
-
-            // Use Rewrite rules
-            var routeService = app.ApplicationServices.GetRequiredService<IRouteService>();
-            routeService.RouteRules.AddRange(translationRouteRules);
-
-            var rewriteOptions = new RewriteOptions();
-            foreach (var routeRule in routeService.RouteRules)
-            {
-                foreach (var rewriteRule in routeRule.RewriteRules)
-                {
-                    rewriteOptions.AddRewrite(rewriteRule.Regex, rewriteRule.Replacement,
-                        rewriteRule.SkipRemainingRules);
-                }
-            }
-
-            app.UseRewriter(rewriteOptions);
-
-            app.UseRouting();
-            app.UseStaticFiles();
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllerRoute(
-                    name: "default",
-                    pattern: "{culture}/{controller=home}/{action=index}/{*id}",
-                    constraints: new
-                    {
-                        culture = new RegexRouteConstraint($"^({string.Join('|', supportedLanguages)})?$")
-                    });
-
-                endpoints.MapControllerRoute(
-                    name: "default_root_redirection_with_multiple_cultures",
-                    pattern: "{controller=Redirect}/{action=Index}"
-                );
-
-                endpoints.MapDynamicControllerRoute<TranslationTransformer>(
-                    "{culture}/{controller=home}/{action=index}/{*id}");
-            });
+            services.AddControllersWithViews(options => { options.Filters.Add<SetCultureCookieActionFilter>(); });
         }
 
         public static void AddLocalizedRouting(
@@ -102,19 +58,76 @@ namespace AspNetCore.Routing.Translation.Extensions
             }
 
             // Setup localizer
-                services.AddLocalization(options => options.ResourcesPath = resourcePath);
+            services.AddLocalization(options => options.ResourcesPath = resourcePath);
 
-                // Setup Request localization
-                services.Configure<RequestLocalizationOptions>(options =>
+            // Setup Request localization
+            services.Configure<RequestLocalizationOptions>(options =>
+            {
+                var supportedCultures = supportedLanguages.Select(l => new CultureInfo(l)).ToArray();
+                options.DefaultRequestCulture = new RequestCulture(defaultLanguage, defaultLanguage);
+                options.SupportedCultures = supportedCultures;
+                options.SupportedUICultures = supportedCultures;
+
+                options.RequestCultureProviders.Insert(1, new RouteCultureProvider(options.DefaultRequestCulture)
                 {
-                    var supportedCultures = supportedLanguages.Select(l => new CultureInfo(l)).ToArray();
-                    options.DefaultRequestCulture = new RequestCulture(defaultLanguage, defaultLanguage);
-                    options.SupportedCultures = supportedCultures;
-                    options.SupportedUICultures = supportedCultures;
-
-                    options.RequestCultureProviders.Insert(
-                        0, new RouteCultureProvider(options.DefaultRequestCulture));
+                    Options = options
                 });
+            });
+        }
+
+        public static void UseLocalizedRouting(
+            this IApplicationBuilder app)
+        {
+            // Use Request localization
+            var locOptions = app.ApplicationServices.GetRequiredService<IOptions<RequestLocalizationOptions>>();
+            var translationRouteRules = app.ApplicationServices.GetServices<ICustomTranslation>();
+
+            app.UseRequestLocalization(locOptions.Value);
+
+            // Use Rewrite rules
+            var routeService = app.ApplicationServices.GetRequiredService<IRouteService>();
+            routeService.RouteRules.AddRange(translationRouteRules);
+
+            var rewriteOptions = new RewriteOptions();
+            foreach (var routeRule in routeService.RouteRules)
+            {
+                foreach (var rewriteRule in routeRule.RewriteRules)
+                {
+                    rewriteOptions.AddRewrite(rewriteRule.Regex, rewriteRule.Replacement,
+                        rewriteRule.SkipRemainingRules);
+                }
             }
+
+            app.UseRewriter(rewriteOptions);
+            app.UseRouting();
+        }
+
+        public static void UseLocalizedEndpoints(
+            this IApplicationBuilder app)
+        {
+            // Use Request localization
+            var locOptions = app.ApplicationServices.GetRequiredService<IOptions<RequestLocalizationOptions>>();
+            var supportedLanguages = locOptions.Value.SupportedCultures
+                .Select(c => c.TwoLetterISOLanguageName.ToLower());
+
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllerRoute(
+                    name: "default",
+                    pattern: "{culture}/{controller=home}/{action=index}/{*id}",
+                    constraints: new
+                    {
+                        culture = new RegexRouteConstraint($"^({string.Join('|', supportedLanguages)})?$")
+                    });
+
+                endpoints.MapControllerRoute(
+                    name: "default_root_redirection_with_multiple_cultures",
+                    pattern: "{controller=Redirect}/{action=Index}/{*id}"
+                );
+
+                endpoints.MapDynamicControllerRoute<TranslationTransformer>(
+                    "{culture}/{controller=home}/{action=index}/{*id}");
+            });
         }
     }
+}

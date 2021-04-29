@@ -28,37 +28,16 @@ namespace AspNetCore.Routing.Translation.Providers
 
             if (httpContext.Request.Path.Value != null)
             {
-                var parts = httpContext.Request.Path.Value.Split('/', StringSplitOptions.RemoveEmptyEntries);
-
-                // Test any culture in route
-                if (!parts.Any())
+                var paths = httpContext.Request.Path.Value.Split('/', StringSplitOptions.RemoveEmptyEntries);
+                var culture = paths.FirstOrDefault();
+                if (!string.IsNullOrWhiteSpace(culture) &&
+                    Options.SupportedCultures.Any(l => l.TwoLetterISOLanguageName.Equals(culture, StringComparison.OrdinalIgnoreCase)))
                 {
-                    // Set default Culture and default UICulture
-                    return await Task.FromResult(
-                        new ProviderCultureResult(
-                            _defaultCulture.TwoLetterISOLanguageName
-                            , _defaultUiCulture.TwoLetterISOLanguageName)
-                    );
+                    // Set Culture and UICulture from route culture parameter
+                    return await Task.FromResult(new ProviderCultureResult(culture, culture));
                 }
-
-
-                var culture = parts.First();
-
-                // Test if the culture is properly formatted
-                if (!Regex.IsMatch(culture, @"^[a-z]{2}(-[A-Z]{2})*$"))
-                {
-                    // Set default Culture and default UICulture
-                    return await Task.FromResult(
-                        new ProviderCultureResult(
-                            _defaultCulture.TwoLetterISOLanguageName
-                            , _defaultUiCulture.TwoLetterISOLanguageName)
-                    );
-                }
-
-                // Set Culture and UICulture from route culture parameter
-                return await Task.FromResult(new ProviderCultureResult(culture, culture));
             }
-            
+
             return await NullProviderCultureResult;
         }
     }
