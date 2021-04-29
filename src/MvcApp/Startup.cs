@@ -27,6 +27,8 @@ namespace MvcApp
             {
                 // Add filter to set current filter in cookies
                 options.AddCultureCookieFilter();
+                
+                // Set current language of user in a session somewhere
                 options.Filters.Add<SetLanguageActionFilter>();
             });
             
