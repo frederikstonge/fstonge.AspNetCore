@@ -4,7 +4,6 @@ using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using AspNetCore.Routing.Translation.Factories;
-using AspNetCore.Routing.Translation.Filters;
 using AspNetCore.Routing.Translation.Models;
 using AspNetCore.Routing.Translation.Providers;
 using AspNetCore.Routing.Translation.Services;
@@ -22,16 +21,10 @@ namespace AspNetCore.Routing.Translation.Extensions
 {
     public static class StartupExtensions
     {
-        public static void AddControllersWithViewsAndCulture(this IServiceCollection services)
-        {
-            services.AddControllersWithViews(options => { options.Filters.Add<SetCultureCookieActionFilter>(); });
-        }
-
         public static void AddLocalizedRouting(
             this IServiceCollection services,
             ICollection<string> supportedLanguages,
-            string defaultLanguage,
-            string resourcePath = "Resources")
+            string defaultLanguage)
         {
             if (string.IsNullOrEmpty(defaultLanguage) ||
                 supportedLanguages == null ||
@@ -43,8 +36,6 @@ namespace AspNetCore.Routing.Translation.Extensions
 
             // Inject required services
             services.AddRouting();
-
-
             services.AddSingleton<IRouteService, RouteService>();
             services.AddSingleton<TranslationTransformer>();
             services.Replace(new ServiceDescriptor(typeof(IUrlHelperFactory), new CustomUrlHelperFactory()));
@@ -57,9 +48,6 @@ namespace AspNetCore.Routing.Translation.Extensions
                 services.AddSingleton(typeof(ICustomTranslation), customTranslation);
             }
 
-            // Setup localizer
-            services.AddLocalization(options => options.ResourcesPath = resourcePath);
-
             // Setup Request localization
             services.Configure<RequestLocalizationOptions>(options =>
             {
@@ -68,7 +56,7 @@ namespace AspNetCore.Routing.Translation.Extensions
                 options.SupportedCultures = supportedCultures;
                 options.SupportedUICultures = supportedCultures;
 
-                options.RequestCultureProviders.Insert(1, new RouteCultureProvider(options.DefaultRequestCulture)
+                options.RequestCultureProviders.Insert(1, new RouteCultureProvider()
                 {
                     Options = options
                 });
@@ -81,7 +69,6 @@ namespace AspNetCore.Routing.Translation.Extensions
             // Use Request localization
             var locOptions = app.ApplicationServices.GetRequiredService<IOptions<RequestLocalizationOptions>>();
             var translationRouteRules = app.ApplicationServices.GetServices<ICustomTranslation>();
-
             app.UseRequestLocalization(locOptions.Value);
 
             // Use Rewrite rules
@@ -101,15 +88,11 @@ namespace AspNetCore.Routing.Translation.Extensions
             app.UseRewriter(rewriteOptions);
             app.UseRouting();
         }
-
+        
+        
         public static void UseLocalizedEndpoints(
-            this IApplicationBuilder app)
+            this IApplicationBuilder app, string[] supportedLanguages)
         {
-            // Use Request localization
-            var locOptions = app.ApplicationServices.GetRequiredService<IOptions<RequestLocalizationOptions>>();
-            var supportedLanguages = locOptions.Value.SupportedCultures
-                .Select(c => c.TwoLetterISOLanguageName.ToLower());
-
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
@@ -129,5 +112,6 @@ namespace AspNetCore.Routing.Translation.Extensions
                     "{culture}/{controller=home}/{action=index}/{*id}");
             });
         }
+
     }
 }
