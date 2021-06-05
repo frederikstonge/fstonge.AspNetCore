@@ -46,6 +46,12 @@ You need to add the following structure in your appsettings:
 }
 ```
 
+## Options
+You can inject an IOptions that contains the values from your appsettings. Use the following:
+```c#
+IOptions<TranslationRoutingOptions> options
+```
+
 ## Custom route translation
 You can create your own custom validation by deriving from ICustomTranslation:
 ```c#
