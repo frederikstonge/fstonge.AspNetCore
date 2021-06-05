@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc.Filters;
 
-namespace MvcApp.Filters
+namespace SampleProject.Filters
 {
     public class SetLanguageActionFilter : IAsyncActionFilter
     {

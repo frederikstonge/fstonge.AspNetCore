@@ -1,11 +1,13 @@
 ﻿using System;
 using AspNetCore.Routing.Translation.Helpers;
+using AspNetCore.Routing.Translation.Models;
 using AspNetCore.Routing.Translation.Services;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 
 namespace AspNetCore.Routing.Translation.Factories
 {
@@ -43,8 +45,9 @@ namespace AspNetCore.Routing.Translation.Factories
                 var services = httpContext.RequestServices;
                 var linkGenerator = services.GetRequiredService<LinkGenerator>();
                 var routeService = services.GetRequiredService<IRouteService>();
+                var transOptions = services.GetRequiredService<IOptions<TranslationRoutingOptions>>();
 
-                urlHelper = new CustomEndpointRoutingUrlHelper(context, linkGenerator, routeService);
+                urlHelper = new CustomEndpointRoutingUrlHelper(context, linkGenerator, routeService, transOptions);
             }
             else
             {

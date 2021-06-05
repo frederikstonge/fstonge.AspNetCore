@@ -6,9 +6,13 @@ namespace AspNetCore.Routing.Translation.Services
     internal interface IRouteService
     {
         List<ICustomTranslation> RouteRules { get; }
+        
         string GetControllerTranslatedValue(string controllerName, string culture);
+        
         string GetControllerName(string translatedName, string currentCulture);
+        
         string GetActionTranslatedValue(string controllerName, string actionName, string culture);
+        
         string GetActionName(string controllerName, string translatedName, string currentCulture);
     }
 }

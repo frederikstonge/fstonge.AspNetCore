@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Reflection;
 using AspNetCore.Routing.Translation.Factories;
 using AspNetCore.Routing.Translation.Filters;
 using AspNetCore.Routing.Translation.Models;
@@ -15,6 +13,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.AspNetCore.Rewrite;
 using Microsoft.AspNetCore.Routing.Constraints;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Options;
@@ -36,18 +35,21 @@ namespace AspNetCore.Routing.Translation.Extensions
         /// Inject required services, add routing and replace current UrlHelperFactory
         /// </summary>
         /// <param name="services">Service collection</param>
-        /// <param name="supportedLanguages">List of supported languages</param>
-        /// <param name="defaultLanguage">The default language</param>
+        /// <param name="configuration">Configuration</param>
         /// <exception cref="InvalidOperationException">Supported languages must contain the default language.</exception>
         public static void AddRoutingLocalization(
             this IServiceCollection services,
-            ICollection<string> supportedLanguages,
-            string defaultLanguage)
+            IConfiguration configuration)
         {
-            if (string.IsNullOrEmpty(defaultLanguage) ||
-                supportedLanguages == null ||
-                !supportedLanguages.Contains(defaultLanguage))
-
+            services.Configure<TranslationRoutingOptions>(configuration.GetSection(TranslationRoutingOptions.TranslationRouting));
+            
+            var translationRoutingOptions = configuration
+                .GetSection(TranslationRoutingOptions.TranslationRouting)
+                .Get<TranslationRoutingOptions>();
+            
+            if (string.IsNullOrEmpty(translationRoutingOptions.DefaultLanguage) ||
+                translationRoutingOptions.SupportedLanguages == null ||
+                !translationRoutingOptions.SupportedLanguages.Contains(translationRoutingOptions.DefaultLanguage))
             {
                 throw new InvalidOperationException("Supported languages must contain the default language.");
             }
@@ -61,8 +63,14 @@ namespace AspNetCore.Routing.Translation.Extensions
             // Setup Request localization
             services.Configure<RequestLocalizationOptions>(options =>
             {
-                var supportedCultures = supportedLanguages.Select(l => new CultureInfo(l)).ToArray();
-                options.DefaultRequestCulture = new RequestCulture(defaultLanguage, defaultLanguage);
+                var supportedCultures = translationRoutingOptions.SupportedLanguages
+                    .Select(l => new CultureInfo(l))
+                    .ToArray();
+                
+                options.DefaultRequestCulture = new RequestCulture(
+                    translationRoutingOptions.DefaultLanguage, 
+                    translationRoutingOptions.DefaultLanguage);
+                
                 options.SupportedCultures = supportedCultures;
                 options.SupportedUICultures = supportedCultures;
 
@@ -95,7 +103,9 @@ namespace AspNetCore.Routing.Translation.Extensions
                 {
                     foreach (var rewriteRule in routeRule.RewriteRules)
                     {
-                        rewriteOptions.AddRewrite(rewriteRule.Regex, rewriteRule.Replacement,
+                        rewriteOptions.AddRewrite(
+                            rewriteRule.Regex, 
+                            rewriteRule.Replacement,
                             rewriteRule.SkipRemainingRules);
                     }
                 }
@@ -110,28 +120,46 @@ namespace AspNetCore.Routing.Translation.Extensions
         /// Preset the UseEndpoints with correct routes for culture
         /// </summary>
         /// <param name="app">Application builder</param>
-        /// <param name="supportedLanguages">List of supported languages</param>
-        public static void UseEndpointsLocalization(this IApplicationBuilder app, string[] supportedLanguages)
+        public static void UseEndpointsLocalization(this IApplicationBuilder app)
         {
-            app.UseEndpoints(endpoints =>
+            var transOptions = app.ApplicationServices.GetRequiredService<IOptions<TranslationRoutingOptions>>();
+
+            if (transOptions.Value.SupportedLanguages.Length > 1)
             {
-                endpoints.MapControllerRoute(
-                    name: "default",
-                    pattern: "{culture}/{controller=home}/{action=index}/{*id}",
-                    constraints: new
-                    {
-                        culture = new RegexRouteConstraint($"^({string.Join('|', supportedLanguages)})?$")
-                    });
+                var cultureRegex =
+                    new RegexRouteConstraint(
+                        $"^({string.Join('|', transOptions.Value.SupportedLanguages)})?$");
 
-                endpoints.MapControllerRoute(
-                    name: "default_root_redirection_with_multiple_cultures",
-                    pattern: "{controller=Redirect}/{action=Index}/{*id}"
-                );
+                app.UseEndpoints(endpoints =>
+                {
+                    endpoints.MapControllerRoute(
+                        name: "default",
+                        pattern: "{culture}/{controller=home}/{action=index}/{*id}",
+                        constraints: new
+                        {
+                            culture = cultureRegex
+                        });
 
-                endpoints.MapDynamicControllerRoute<TranslationTransformer>(
-                    "{culture}/{controller=home}/{action=index}/{*id}");
-            });
+                    endpoints.MapControllerRoute(
+                        name: "default_root_redirection_with_multiple_cultures",
+                        pattern: "{controller=Redirect}/{action=Index}/{*id}");
+
+                    endpoints.MapDynamicControllerRoute<TranslationTransformer>(
+                        "{culture}/{controller=home}/{action=index}/{*id}");
+                });
+            }
+            else
+            {
+                app.UseEndpoints(endpoints =>
+                {
+                    endpoints.MapControllerRoute(
+                        name: "default",
+                        pattern: "{controller=home}/{action=index}/{*id}");
+                    
+                    endpoints.MapDynamicControllerRoute<TranslationTransformer>(
+                        "{controller=home}/{action=index}/{*id}");
+                });
+            }
         }
-
     }
 }

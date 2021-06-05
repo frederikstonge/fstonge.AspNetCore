@@ -5,9 +5,16 @@ VisualStudioVersion = 15.0.26124.0
 MinimumVisualStudioVersion = 15.0.26124.0
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{87DB390C-7EAD-4E95-9C18-31EE134013A5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MvcApp", "src\MvcApp\MvcApp.csproj", "{E62B31D2-4FDE-49FE-9009-BB34C8ECC73D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SampleProject", "src\SampleProject\SampleProject.csproj", "{E62B31D2-4FDE-49FE-9009-BB34C8ECC73D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AspNetCore.Routing.Translation", "src\AspNetCore.Routing.Translation\AspNetCore.Routing.Translation.csproj", "{4526D9BF-70D6-4726-8571-3C1883E94EE1}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{3E971030-AE32-42F9-859F-F48ED8D733E2}"
+ProjectSection(SolutionItems) = preProject
+	.gitignore = .gitignore
+	README.md = README.md
+	stylecop.ruleset = stylecop.ruleset
+EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

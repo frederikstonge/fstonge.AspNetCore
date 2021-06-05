@@ -10,7 +10,9 @@ namespace AspNetCore.Routing.Translation.Attributes
             Culture = culture;
             Value = value;
         }
+        
         public string Culture { get; }
+        
         public string Value { get; }
     }
 }

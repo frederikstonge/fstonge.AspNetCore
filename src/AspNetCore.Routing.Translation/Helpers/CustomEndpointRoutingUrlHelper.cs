@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.AspNetCore.Routing;
+using Microsoft.Extensions.Options;
 
 namespace AspNetCore.Routing.Translation.Helpers
 {
@@ -14,15 +15,18 @@ namespace AspNetCore.Routing.Translation.Helpers
     {
         private readonly LinkGenerator _linkGenerator;
         private readonly IRouteService _routeService;
+        private readonly TranslationRoutingOptions _transOptions;
 
         public CustomEndpointRoutingUrlHelper(
             ActionContext actionContext,
             LinkGenerator linkGenerator,
-            IRouteService routeService)
+            IRouteService routeService,
+            IOptions<TranslationRoutingOptions> transOptions)
             : base(actionContext)
         {
             _linkGenerator = linkGenerator ?? throw new ArgumentNullException(nameof(linkGenerator));
             _routeService = routeService ?? throw new ArgumentNullException(nameof(routeService));
+            _transOptions = transOptions?.Value ?? throw new ArgumentNullException(nameof(routeService));
         }
 
         public override string Action(UrlActionContext urlActionContext)
@@ -90,8 +94,6 @@ namespace AspNetCore.Routing.Translation.Helpers
                     fragment: fragment);
             }
 
-            
-            
             return GenerateUrl(urlActionContext.Protocol, urlActionContext.Host, path);
         }
 
@@ -113,10 +115,15 @@ namespace AspNetCore.Routing.Translation.Helpers
 
         private string GetCultureValue(RouteValueDictionary values)
         {
+            if (_transOptions.SupportedLanguages.Length <= 1)
+            {
+                return null;
+            }
+            
             var currentCulture = CultureInfo.CurrentCulture.TwoLetterISOLanguageName.ToLower();
             if (AmbientValues.TryGetValue(RouteValue.Culture, out var ambiantCulture))
             {
-                currentCulture = (string) ambiantCulture;
+                currentCulture = (string)ambiantCulture;
             }
 
             if (values.TryGetValue(RouteValue.Culture, out var culture))

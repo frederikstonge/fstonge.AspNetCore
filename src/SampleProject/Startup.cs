@@ -1,24 +1,21 @@
-using System;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using AspNetCore.Routing.Translation.Extensions;
 using AspNetCore.Routing.Translation.Models;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.Extensions.Configuration;
-using MvcApp.Filters;
-using MvcApp.Translations;
+using SampleProject.Filters;
+using SampleProject.Translations;
 
-namespace MvcApp
+namespace SampleProject
 {
     public class Startup
     {
-        private readonly string[] _supportedLanguages;
-        private readonly string _defaultLanguage;
+        private readonly IConfiguration _configuration;
         
         public Startup(IConfiguration configuration)
         {
-            _supportedLanguages = configuration.GetValue<string>("SupportedLanguages").Split(",", StringSplitOptions.RemoveEmptyEntries);
-            _defaultLanguage = configuration.GetValue<string>("DefaultLanguage");
+            _configuration = configuration;
         }
         
         public void ConfigureServices(IServiceCollection services)
@@ -36,9 +33,9 @@ namespace MvcApp
             services.AddLocalization(options => options.ResourcesPath = "Resources");
             builder.AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix);
             builder.AddDataAnnotationsLocalization();
-            
+
             // Inject required services, add routing and replace current UrlHelperFactory
-            services.AddRoutingLocalization(_supportedLanguages, _defaultLanguage);
+            services.AddRoutingLocalization(_configuration);
             
             // Add custom translations as singleton
             services.AddSingleton<ICustomTranslation, ProductTranslation>();
@@ -50,8 +47,7 @@ namespace MvcApp
             app.UseRoutingLocalization();
             app.UseStaticFiles();
             
-            // Preset the UseEndpoints with correct routes for culture
-            app.UseEndpointsLocalization(_supportedLanguages);
+            app.UseEndpointsLocalization();
         }
     }
 }

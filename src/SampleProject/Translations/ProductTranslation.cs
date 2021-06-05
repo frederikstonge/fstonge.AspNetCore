@@ -1,10 +1,17 @@
 ﻿using AspNetCore.Routing.Translation.Extensions;
 using AspNetCore.Routing.Translation.Models;
+using Microsoft.Extensions.Options;
 
-namespace MvcApp.Translations
+namespace SampleProject.Translations
 {
     public class ProductTranslation : ICustomTranslation
     {
+        private TranslationRoutingOptions _options;
+        public ProductTranslation(IOptions<TranslationRoutingOptions> options)
+        {
+            _options = options.Value;
+        }
+        
         public string ControllerName => "products";
         
         public string ActionName => "detail";
@@ -18,11 +25,16 @@ namespace MvcApp.Translations
         
         public ICustomTranslation.GenerateUrlPath GenerateUrlPathCallback => 
             (values, _) =>
-        {
-            return $"/{values.GetParameterValue(RouteValue.Culture)}/" +
+            {
+                var culture = _options.SupportedLanguages.Length > 1
+                    ? $"{values.GetParameterValue(RouteValue.Culture)}/"
+                    : string.Empty;
+                
+                return "/" +
+                   $"{culture}" +
                    $"{values.GetParameterValue(RouteValue.Controller)}/" + 
-                   $"10-control-and-testing/" +
-                   $"14-testing-string/" +
+                   "10-control-and-testing/" +
+                   "14-testing-string/" +
                    $"p-{values.GetParameterValue(RouteValue.Id)}-testing-product-string";
         };
     }

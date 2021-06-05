@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using AspNetCore.Routing.Translation.Attributes;
 
-namespace MvcApp.Controllers
+namespace SampleProject.Controllers
 {
     [Translate("en", "home")]
     [Translate("fr", "accueil")]
