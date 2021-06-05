@@ -34,7 +34,7 @@ public void Configure(IApplicationBuilder app)
 }
 ```
 
-### In Appsettings.json
+### In appsettings.json
 You need to add the following structure in your appsettings:
 ```json
 {
