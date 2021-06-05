@@ -1,5 +1,5 @@
 
-# ASP.NET 5 ENDPOINT ROUTE LOCALIZATION AND TRANSLATION
+# ASP.NET Core endpoint route localization and translation
 
 ## How to use it:
 ### In Startup.cs
