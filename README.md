@@ -2,7 +2,7 @@
 # ASP.NET 5 ENDPOINT ROUTE LOCALIZATION AND TRANSLATION
 
 ## How to use it:
-###In Startup.cs
+### In Startup.cs
 Under ConfigureServices, you need to add the following:
 ```c#
 public void ConfigureServices(IServiceCollection services)
@@ -46,7 +46,7 @@ You need to add the following structure in your appsettings:
 }
 ```
 
-##Custom route translation
+## Custom route translation
 You can create your own custom validation by deriving from ICustomTranslation:
 ```c#
 public class ProductTranslation : ICustomTranslation
