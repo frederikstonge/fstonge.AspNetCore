@@ -63,7 +63,7 @@ public class ProductTranslation : ICustomTranslation
     };
     
     public ICustomTranslation.GenerateUrlPath GenerateUrlPathCallback => 
-        (values, _) =>
+        (values, fragment) =>
         {
             return "/" +
                $"{values.GetParameterValue(RouteValue.Culture)}/" +
