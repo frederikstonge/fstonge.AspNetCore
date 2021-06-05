@@ -46,6 +46,20 @@ You need to add the following structure in your appsettings:
 }
 ```
 
+### Attribute in Controllers
+```c#
+[Translate("en", "orders")]
+[Translate("fr", "commandes")]
+public class OrdersController : Controller
+{
+    [Translate("fr", "liste")]
+    public IActionResult List()
+    {
+        return View();
+    }
+}
+```
+
 ## Options
 You can inject an IOptions that contains the values from your appsettings. Use the following:
 ```c#
