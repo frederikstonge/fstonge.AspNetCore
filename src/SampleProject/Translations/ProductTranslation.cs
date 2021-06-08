@@ -1,13 +1,14 @@
 ﻿using AspNetCore.Routing.Translation.Extensions;
 using AspNetCore.Routing.Translation.Models;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Options;
 
 namespace SampleProject.Translations
 {
     public class ProductTranslation : ICustomTranslation
     {
-        private RoutingTranslationOptions _options;
-        public ProductTranslation(IOptions<RoutingTranslationOptions> options)
+        private RequestLocalizationOptions _options;
+        public ProductTranslation(IOptions<RequestLocalizationOptions> options)
         {
             _options = options.Value;
         }
@@ -26,7 +27,7 @@ namespace SampleProject.Translations
         public ICustomTranslation.GenerateUrlPath GenerateUrlPathCallback => 
             (values, _) =>
             {
-                var culture = _options.SupportedCultures.Length > 1
+                var culture = _options.SupportedCultures.Count > 1
                     ? $"{values.GetParameterValue(RouteValue.Culture)}/"
                     : string.Empty;
                 

@@ -1,6 +1,6 @@
 ﻿namespace AspNetCore.Routing.Translation.Models
 {
-    public class RoutingTranslationOptions
+    internal class RoutingTranslationOptions
     {
         public const string RoutingTranslation = "RoutingTranslation";
 

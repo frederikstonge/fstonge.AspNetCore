@@ -3,6 +3,7 @@ using System.Globalization;
 using System.Linq;
 using AspNetCore.Routing.Translation.Models;
 using AspNetCore.Routing.Translation.Services;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Routing;
@@ -15,13 +16,13 @@ namespace AspNetCore.Routing.Translation.Helpers
     {
         private readonly LinkGenerator _linkGenerator;
         private readonly IRouteService _routeService;
-        private readonly RoutingTranslationOptions _transOptions;
+        private readonly RequestLocalizationOptions _transOptions;
 
         public CustomEndpointRoutingUrlHelper(
             ActionContext actionContext,
             LinkGenerator linkGenerator,
             IRouteService routeService,
-            IOptions<RoutingTranslationOptions> transOptions)
+            IOptions<RequestLocalizationOptions> transOptions)
             : base(actionContext)
         {
             _linkGenerator = linkGenerator ?? throw new ArgumentNullException(nameof(linkGenerator));
@@ -115,12 +116,12 @@ namespace AspNetCore.Routing.Translation.Helpers
 
         private string GetCultureValue(RouteValueDictionary values)
         {
-            if (_transOptions.SupportedCultures.Length <= 1)
+            if (_transOptions.SupportedCultures.Count <= 1)
             {
                 return null;
             }
             
-            var currentCulture = CultureInfo.CurrentCulture.TwoLetterISOLanguageName.ToLower();
+            var currentCulture = CultureInfo.CurrentCulture.ToString();
             if (AmbientValues.TryGetValue(RouteValue.Culture, out var ambiantCulture))
             {
                 currentCulture = (string)ambiantCulture;

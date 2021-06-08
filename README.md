@@ -72,7 +72,7 @@ public class OrdersController : Controller
 ## Options
 You can inject an IOptions that contains the values from your appsettings. Use the following:
 ```c#
-IOptions<RoutingTranslationOptions> options
+IOptions<RequestLocalizationOptions> options
 ```
 
 ## Custom route translation

@@ -1,6 +1,7 @@
 using System.Threading.Tasks;
 using AspNetCore.Routing.Translation.Models;
 using AspNetCore.Routing.Translation.Services;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.AspNetCore.Routing;
@@ -11,9 +12,9 @@ namespace AspNetCore.Routing.Translation.Transformers
     internal class TranslationTransformer : DynamicRouteValueTransformer
     {
         private readonly IRouteService _routeService;
-        private readonly RoutingTranslationOptions _transOptions;
+        private readonly RequestLocalizationOptions _transOptions;
         
-        public TranslationTransformer(IRouteService routeService, IOptions<RoutingTranslationOptions> transOptions)
+        public TranslationTransformer(IRouteService routeService, IOptions<RequestLocalizationOptions> transOptions)
         {
             _routeService = routeService;
             _transOptions = transOptions.Value;
@@ -28,7 +29,7 @@ namespace AspNetCore.Routing.Translation.Transformers
             
             var culture = values.ContainsKey(RouteValue.Culture) 
                 ? (string)values[RouteValue.Culture]
-                : _transOptions.DefaultCulture;
+                : _transOptions.DefaultRequestCulture.Culture.ToString();
             
             var controller = (string)values[RouteValue.Controller];
             var controllerName = _routeService.GetControllerName(controller, culture);

@@ -41,11 +41,10 @@ namespace AspNetCore.Routing.Translation.Extensions
             this IServiceCollection services,
             IConfiguration configuration)
         {
-            services.Configure<RoutingTranslationOptions>(configuration.GetSection(RoutingTranslationOptions.RoutingTranslation));
-            
-            var translationRoutingOptions = configuration
+            RoutingTranslationOptions translationRoutingOptions = new RoutingTranslationOptions();
+            configuration
                 .GetSection(RoutingTranslationOptions.RoutingTranslation)
-                .Get<RoutingTranslationOptions>();
+                .Bind(translationRoutingOptions);
             
             if (string.IsNullOrEmpty(translationRoutingOptions.DefaultCulture) ||
                 translationRoutingOptions.SupportedCultures == null ||
@@ -122,9 +121,9 @@ namespace AspNetCore.Routing.Translation.Extensions
         /// <param name="app">Application builder</param>
         public static void UseEndpointsLocalization(this IApplicationBuilder app)
         {
-            var transOptions = app.ApplicationServices.GetRequiredService<IOptions<RoutingTranslationOptions>>();
+            var transOptions = app.ApplicationServices.GetRequiredService<IOptions<RequestLocalizationOptions>>();
 
-            if (transOptions.Value.SupportedCultures.Length > 1)
+            if (transOptions.Value.SupportedCultures.Count > 1)
             {
                 var cultureRegex =
                     new RegexRouteConstraint(
