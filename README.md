@@ -60,6 +60,15 @@ public class OrdersController : Controller
 }
 ```
 
+### Generate your first urls
+```c#
+<form asp-controller="orders" asp-action="list"></form>
+
+<a asp-controller="products" asp-action="detail" asp-route-id="12"></a>
+
+<a asp-route-culture="fr">French</a>
+```
+
 ## Options
 You can inject an IOptions that contains the values from your appsettings. Use the following:
 ```c#
