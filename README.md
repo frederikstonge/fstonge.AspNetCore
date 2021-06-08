@@ -38,10 +38,10 @@ public void Configure(IApplicationBuilder app)
 You need to add the following structure in your appsettings:
 ```json
 {
-  "TranslationRouting":
+  "RoutingTranslation":
   {
-    "SupportedLanguages":[ "fr", "en" ],
-    "DefaultLanguage": "fr"
+    "SupportedCultures":[ "fr", "en" ],
+    "DefaultCulture": "fr"
   }
 }
 ```
@@ -63,7 +63,7 @@ public class OrdersController : Controller
 ## Options
 You can inject an IOptions that contains the values from your appsettings. Use the following:
 ```c#
-IOptions<TranslationRoutingOptions> options
+IOptions<RoutingTranslationOptions> options
 ```
 
 ## Custom route translation
@@ -78,7 +78,7 @@ public class ProductTranslation : ICustomTranslation
     public RewriteRule[] RewriteRules => new[]
     {
         new RewriteRule(
-            @"^([a-zA-Z]{2})\/([^\/]+)\/[-\/a-zA-Z0-9]+\/p-([=._a-zA-Z0-9]+)-.*$",
+            @"^([-a-zA-Z]+)\/([^\/]+)\/[-\/a-zA-Z0-9]+\/p-([=._a-zA-Z0-9]+)-.*$",
             "$1/$2/detail/$3")
     };
     
