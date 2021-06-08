@@ -42,15 +42,13 @@ namespace AspNetCore.Routing.Translation.Extensions
             IConfiguration configuration)
         {
             RoutingTranslationOptions translationRoutingOptions = new RoutingTranslationOptions();
-            configuration
-                .GetSection(RoutingTranslationOptions.RoutingTranslation)
-                .Bind(translationRoutingOptions);
+            configuration.GetSection(RoutingTranslationOptions.RoutingTranslation).Bind(translationRoutingOptions);
             
             if (string.IsNullOrEmpty(translationRoutingOptions.DefaultCulture) ||
                 translationRoutingOptions.SupportedCultures == null ||
                 !translationRoutingOptions.SupportedCultures.Contains(translationRoutingOptions.DefaultCulture))
             {
-                throw new InvalidOperationException("Supported languages must contain the default language.");
+                throw new InvalidOperationException("Supported cultures must contain the default culture.");
             }
 
             // Inject required services
@@ -64,7 +62,7 @@ namespace AspNetCore.Routing.Translation.Extensions
             {
                 var supportedCultures = translationRoutingOptions.SupportedCultures
                     .Select(l => new CultureInfo(l))
-                    .ToArray();
+                    .ToList();
                 
                 options.DefaultRequestCulture = new RequestCulture(
                     translationRoutingOptions.DefaultCulture, 
