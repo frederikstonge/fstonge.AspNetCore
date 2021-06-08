@@ -6,8 +6,8 @@ namespace SampleProject.Translations
 {
     public class ProductTranslation : ICustomTranslation
     {
-        private TranslationRoutingOptions _options;
-        public ProductTranslation(IOptions<TranslationRoutingOptions> options)
+        private RoutingTranslationOptions _options;
+        public ProductTranslation(IOptions<RoutingTranslationOptions> options)
         {
             _options = options.Value;
         }
@@ -19,14 +19,14 @@ namespace SampleProject.Translations
         public RewriteRule[] RewriteRules => new[]
         {
             new RewriteRule(
-                @"^([a-zA-Z]{2})\/([^\/]+)\/[-\/a-zA-Z0-9]+\/p-([=._a-zA-Z0-9]+)-.*$",
+                @"^([-a-zA-Z]+)\/([^\/]+)\/[-\/a-zA-Z0-9]+\/p-([=._a-zA-Z0-9]+)-.*$",
                 "$1/$2/detail/$3")
         };
         
         public ICustomTranslation.GenerateUrlPath GenerateUrlPathCallback => 
             (values, _) =>
             {
-                var culture = _options.SupportedLanguages.Length > 1
+                var culture = _options.SupportedCultures.Length > 1
                     ? $"{values.GetParameterValue(RouteValue.Culture)}/"
                     : string.Empty;
                 

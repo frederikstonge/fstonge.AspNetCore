@@ -15,13 +15,13 @@ namespace AspNetCore.Routing.Translation.Helpers
     {
         private readonly LinkGenerator _linkGenerator;
         private readonly IRouteService _routeService;
-        private readonly TranslationRoutingOptions _transOptions;
+        private readonly RoutingTranslationOptions _transOptions;
 
         public CustomEndpointRoutingUrlHelper(
             ActionContext actionContext,
             LinkGenerator linkGenerator,
             IRouteService routeService,
-            IOptions<TranslationRoutingOptions> transOptions)
+            IOptions<RoutingTranslationOptions> transOptions)
             : base(actionContext)
         {
             _linkGenerator = linkGenerator ?? throw new ArgumentNullException(nameof(linkGenerator));
@@ -115,7 +115,7 @@ namespace AspNetCore.Routing.Translation.Helpers
 
         private string GetCultureValue(RouteValueDictionary values)
         {
-            if (_transOptions.SupportedLanguages.Length <= 1)
+            if (_transOptions.SupportedCultures.Length <= 1)
             {
                 return null;
             }

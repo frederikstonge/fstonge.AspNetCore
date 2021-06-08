@@ -45,7 +45,7 @@ namespace AspNetCore.Routing.Translation.Factories
                 var services = httpContext.RequestServices;
                 var linkGenerator = services.GetRequiredService<LinkGenerator>();
                 var routeService = services.GetRequiredService<IRouteService>();
-                var transOptions = services.GetRequiredService<IOptions<TranslationRoutingOptions>>();
+                var transOptions = services.GetRequiredService<IOptions<RoutingTranslationOptions>>();
 
                 urlHelper = new CustomEndpointRoutingUrlHelper(context, linkGenerator, routeService, transOptions);
             }

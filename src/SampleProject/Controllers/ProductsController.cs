@@ -3,6 +3,7 @@ using AspNetCore.Routing.Translation.Attributes;
 
 namespace SampleProject.Controllers
 {
+    [Translate("fr-CA", "produits")]
     [Translate("fr", "produits")]
     public class ProductsController : Controller
     {

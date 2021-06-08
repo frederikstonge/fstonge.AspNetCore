@@ -41,15 +41,15 @@ namespace AspNetCore.Routing.Translation.Extensions
             this IServiceCollection services,
             IConfiguration configuration)
         {
-            services.Configure<TranslationRoutingOptions>(configuration.GetSection(TranslationRoutingOptions.TranslationRouting));
+            services.Configure<RoutingTranslationOptions>(configuration.GetSection(RoutingTranslationOptions.RoutingTranslation));
             
             var translationRoutingOptions = configuration
-                .GetSection(TranslationRoutingOptions.TranslationRouting)
-                .Get<TranslationRoutingOptions>();
+                .GetSection(RoutingTranslationOptions.RoutingTranslation)
+                .Get<RoutingTranslationOptions>();
             
-            if (string.IsNullOrEmpty(translationRoutingOptions.DefaultLanguage) ||
-                translationRoutingOptions.SupportedLanguages == null ||
-                !translationRoutingOptions.SupportedLanguages.Contains(translationRoutingOptions.DefaultLanguage))
+            if (string.IsNullOrEmpty(translationRoutingOptions.DefaultCulture) ||
+                translationRoutingOptions.SupportedCultures == null ||
+                !translationRoutingOptions.SupportedCultures.Contains(translationRoutingOptions.DefaultCulture))
             {
                 throw new InvalidOperationException("Supported languages must contain the default language.");
             }
@@ -63,13 +63,13 @@ namespace AspNetCore.Routing.Translation.Extensions
             // Setup Request localization
             services.Configure<RequestLocalizationOptions>(options =>
             {
-                var supportedCultures = translationRoutingOptions.SupportedLanguages
+                var supportedCultures = translationRoutingOptions.SupportedCultures
                     .Select(l => new CultureInfo(l))
                     .ToArray();
                 
                 options.DefaultRequestCulture = new RequestCulture(
-                    translationRoutingOptions.DefaultLanguage, 
-                    translationRoutingOptions.DefaultLanguage);
+                    translationRoutingOptions.DefaultCulture, 
+                    translationRoutingOptions.DefaultCulture);
                 
                 options.SupportedCultures = supportedCultures;
                 options.SupportedUICultures = supportedCultures;
@@ -122,13 +122,13 @@ namespace AspNetCore.Routing.Translation.Extensions
         /// <param name="app">Application builder</param>
         public static void UseEndpointsLocalization(this IApplicationBuilder app)
         {
-            var transOptions = app.ApplicationServices.GetRequiredService<IOptions<TranslationRoutingOptions>>();
+            var transOptions = app.ApplicationServices.GetRequiredService<IOptions<RoutingTranslationOptions>>();
 
-            if (transOptions.Value.SupportedLanguages.Length > 1)
+            if (transOptions.Value.SupportedCultures.Length > 1)
             {
                 var cultureRegex =
                     new RegexRouteConstraint(
-                        $"^({string.Join('|', transOptions.Value.SupportedLanguages)})?$");
+                        $"^({string.Join('|', transOptions.Value.SupportedCultures)})?$");
 
                 app.UseEndpoints(endpoints =>
                 {

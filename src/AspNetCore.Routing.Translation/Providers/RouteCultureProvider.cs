@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
@@ -19,11 +20,21 @@ namespace AspNetCore.Routing.Translation.Providers
             {
                 var paths = httpContext.Request.Path.Value.Split('/', StringSplitOptions.RemoveEmptyEntries);
                 var culture = paths.FirstOrDefault();
-                if (!string.IsNullOrWhiteSpace(culture) &&
-                    Options.SupportedCultures.Any(l => l.TwoLetterISOLanguageName.Equals(culture, StringComparison.OrdinalIgnoreCase)))
+                if (!string.IsNullOrWhiteSpace(culture))
                 {
-                    // Set Culture and UICulture from route culture parameter
-                    return await Task.FromResult(new ProviderCultureResult(culture, culture));
+                    try
+                    {
+                        var currentCulture = new CultureInfo(culture);
+                        if (Options.SupportedCultures.Any(l => l.Equals(currentCulture)))
+                        {
+                            // Set Culture and UICulture from route culture parameter
+                            return await Task.FromResult(new ProviderCultureResult(culture, culture));
+                        }
+                    }
+                    catch
+                    {
+                        // ignored
+                    }
                 }
             }
 

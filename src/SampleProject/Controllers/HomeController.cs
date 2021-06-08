@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using AspNetCore.Routing.Translation.Attributes;
 
 namespace SampleProject.Controllers
 {

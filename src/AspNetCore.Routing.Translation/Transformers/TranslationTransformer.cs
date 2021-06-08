@@ -11,9 +11,9 @@ namespace AspNetCore.Routing.Translation.Transformers
     internal class TranslationTransformer : DynamicRouteValueTransformer
     {
         private readonly IRouteService _routeService;
-        private readonly TranslationRoutingOptions _transOptions;
+        private readonly RoutingTranslationOptions _transOptions;
         
-        public TranslationTransformer(IRouteService routeService, IOptions<TranslationRoutingOptions> transOptions)
+        public TranslationTransformer(IRouteService routeService, IOptions<RoutingTranslationOptions> transOptions)
         {
             _routeService = routeService;
             _transOptions = transOptions.Value;
@@ -28,7 +28,7 @@ namespace AspNetCore.Routing.Translation.Transformers
             
             var culture = values.ContainsKey(RouteValue.Culture) 
                 ? (string)values[RouteValue.Culture]
-                : _transOptions.DefaultLanguage;
+                : _transOptions.DefaultCulture;
             
             var controller = (string)values[RouteValue.Controller];
             var controllerName = _routeService.GetControllerName(controller, culture);
