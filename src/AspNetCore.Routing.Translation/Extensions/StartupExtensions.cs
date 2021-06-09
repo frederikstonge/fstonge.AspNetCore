@@ -3,6 +3,7 @@ using System.Globalization;
 using System.Linq;
 using AspNetCore.Routing.Translation.Factories;
 using AspNetCore.Routing.Translation.Filters;
+using AspNetCore.Routing.Translation.Helpers;
 using AspNetCore.Routing.Translation.Models;
 using AspNetCore.Routing.Translation.Providers;
 using AspNetCore.Routing.Translation.Services;
@@ -10,8 +11,10 @@ using AspNetCore.Routing.Translation.Transformers;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.AspNetCore.Rewrite;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.AspNetCore.Routing.Constraints;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -53,9 +56,18 @@ namespace AspNetCore.Routing.Translation.Extensions
 
             // Inject required services
             services.AddRouting();
+            services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
             services.AddSingleton<IRouteService, RouteService>();
             services.AddSingleton<TranslationTransformer>();
             services.Replace(new ServiceDescriptor(typeof(IUrlHelperFactory), new CustomUrlHelperFactory()));
+            services.AddScoped(typeof(IUrlHelper), provider =>
+            {
+                var actionAccessor = provider.GetRequiredService<IActionContextAccessor>();
+                var linkGenerator = provider.GetRequiredService<LinkGenerator>();
+                var routeService = provider.GetRequiredService<IRouteService>();
+                var transOptions = provider.GetRequiredService<IOptions<RequestLocalizationOptions>>();
+                return new CustomEndpointRoutingUrlHelper(actionAccessor.ActionContext, linkGenerator, routeService, transOptions);
+            });
 
             // Setup Request localization
             services.Configure<RequestLocalizationOptions>(options =>
