@@ -6,7 +6,7 @@
         <Description>Translate routes easily on your mvc app</Description>
         <PackageProjectUrl>https://github.com/frederikstonge/AspNetCore-Routing-Translation</PackageProjectUrl>
         <TargetFrameworks>net5.0;netcoreapp3.1</TargetFrameworks>
-        <Version>1.0.0</Version>
+        <Version>1.0.1</Version>
         <Authors>Frederik St-Onge</Authors>
         <Product>AspNetCore Routing Translation</Product>
         <Copyright>Frederik St-Onge 2020</Copyright>
