@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.AspNetCore.Rewrite;
 using Microsoft.AspNetCore.Routing.Constraints;
@@ -58,11 +59,13 @@ namespace AspNetCore.Routing.Translation.Extensions
             services.AddSingleton<IRouteService, RouteService>();
             services.AddSingleton<TranslationTransformer>();
             services.Replace(new ServiceDescriptor(typeof(IUrlHelperFactory), new CustomUrlHelperFactory()));
+            services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
 
             services.AddScoped(typeof(IUrlHelper), provider =>
             {
-                var httpContextAccessor = provider.GetRequiredService<IHttpContextAccessor>();
-                return httpContextAccessor.HttpContext?.Items[typeof(IUrlHelper)] as IUrlHelper;
+                var actionContextAccessor = provider.GetRequiredService<IActionContextAccessor>();
+                var factory = provider.GetRequiredService<IUrlHelperFactory>();
+                return factory?.GetUrlHelper(actionContextAccessor.ActionContext);
             });
 
             // Setup Request localization
