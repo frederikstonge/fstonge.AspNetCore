@@ -7,7 +7,7 @@ namespace SampleProject.Translations
 {
     public class ProductTranslation : ICustomTranslation
     {
-        private RequestLocalizationOptions _options;
+        private readonly RequestLocalizationOptions _options;
         public ProductTranslation(IOptions<RequestLocalizationOptions> options)
         {
             _options = options.Value;
@@ -19,9 +19,13 @@ namespace SampleProject.Translations
         
         public RewriteRule[] RewriteRules => new[]
         {
-            new RewriteRule(
-                @"^([-a-zA-Z]+)\/([^\/]+)\/[-\/a-zA-Z0-9]+\/p-([=._a-zA-Z0-9]+)-.*$",
-                "$1/$2/detail/$3")
+            _options.SupportedCultures.Count > 1
+                ? new RewriteRule(
+                    @"^([-a-zA-Z]+)\/([^\/]+)\/[-\/a-zA-Z0-9]+\/p-([=._a-zA-Z0-9]+)-.*$",
+                    "$1/$2/detail/$3")
+                : new RewriteRule(
+                    @"^([^\/]+)\/[-\/a-zA-Z0-9]+\/p-([=._a-zA-Z0-9]+)-.*$",
+                    "$1/detail/$2")
         };
         
         public ICustomTranslation.GenerateUrlPath GenerateUrlPathCallback => 

@@ -33,12 +33,12 @@ namespace SampleProject
             services.AddLocalization(options => options.ResourcesPath = "Resources");
             builder.AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix);
             builder.AddDataAnnotationsLocalization();
-
-            // Inject required services, add routing and replace current UrlHelperFactory
-            services.AddRoutingLocalization(_configuration);
             
             // Add custom translations as singleton
             services.AddSingleton<ICustomTranslation, ProductTranslation>();
+            
+            // Inject required services, add routing and replace current UrlHelperFactory
+            services.AddRoutingLocalization(_configuration);
         }
 
         public void Configure(IApplicationBuilder app)

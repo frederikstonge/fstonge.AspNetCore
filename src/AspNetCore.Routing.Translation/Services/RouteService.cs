@@ -36,7 +36,7 @@ namespace AspNetCore.Routing.Translation.Services
                 }
             }
             
-            return controllerName;
+            return controllerName.ToLowerInvariant();
         }
 
         public string GetControllerName(string translatedName, string currentCulture)
@@ -53,7 +53,7 @@ namespace AspNetCore.Routing.Translation.Services
                 return controller.Key;
             }
 
-            return translatedName;
+            return translatedName.ToLowerInvariant();
         }
 
         public string GetActionTranslatedValue(string controllerName, string actionName, string culture)
@@ -64,8 +64,7 @@ namespace AspNetCore.Routing.Translation.Services
             if (!string.IsNullOrEmpty(action))
             {
                 var attributes = actions[action];
-                var attribute =
-                    attributes.FirstOrDefault(a => a.Culture.Equals(culture, StringComparison.OrdinalIgnoreCase));
+                var attribute = attributes.FirstOrDefault(a => a.Culture.Equals(culture, StringComparison.OrdinalIgnoreCase));
 
                 if (attribute != null)
                 {
@@ -73,7 +72,7 @@ namespace AspNetCore.Routing.Translation.Services
                 }
             }
             
-            return actionName;
+            return actionName.ToLowerInvariant();
         }
 
         public string GetActionName(string controllerName, string translatedName, string currentCulture)
@@ -92,7 +91,7 @@ namespace AspNetCore.Routing.Translation.Services
                 return action.Key.Substring(prefix.Length, action.Key.Length - prefix.Length);
             }
 
-            return translatedName;
+            return translatedName.ToLowerInvariant();
         }
 
         private Dictionary<string, IEnumerable<TranslateAttribute>> GetTranslatedControllers()

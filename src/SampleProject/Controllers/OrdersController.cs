@@ -1,5 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using AspNetCore.Routing.Translation.Attributes;
+using AspNetCore.Routing.Translation.Helpers;
+using Microsoft.AspNetCore.Routing;
 
 namespace SampleProject.Controllers
 {
@@ -9,11 +11,6 @@ namespace SampleProject.Controllers
     [Translate("fr", "commandes")]
     public class OrdersController : Controller
     {
-        public OrdersController(IUrlHelper urlHelper)
-        {
-            var url = urlHelper.Action("Index", "Home");
-        }
-        
         [Translate("fr-CA", "liste")]
         [Translate("fr", "liste")]
         public IActionResult List()

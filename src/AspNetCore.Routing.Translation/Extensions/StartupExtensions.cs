@@ -1,19 +1,17 @@
 ﻿using System;
 using System.Globalization;
 using System.Linq;
-using AspNetCore.Routing.Translation.Factories;
 using AspNetCore.Routing.Translation.Filters;
+using AspNetCore.Routing.Translation.Helpers;
 using AspNetCore.Routing.Translation.Models;
 using AspNetCore.Routing.Translation.Providers;
 using AspNetCore.Routing.Translation.Services;
 using AspNetCore.Routing.Translation.Transformers;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Infrastructure;
-using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.AspNetCore.Rewrite;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.AspNetCore.Routing.Constraints;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -52,22 +50,7 @@ namespace AspNetCore.Routing.Translation.Extensions
             {
                 throw new InvalidOperationException("Supported cultures must contain the default culture.");
             }
-
-            // Inject required services
-            services.AddHttpContextAccessor();
-            services.AddRouting();
-            services.AddSingleton<IRouteService, RouteService>();
-            services.AddSingleton<TranslationTransformer>();
-            services.Replace(new ServiceDescriptor(typeof(IUrlHelperFactory), new CustomUrlHelperFactory()));
-            services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
-
-            services.AddScoped(typeof(IUrlHelper), provider =>
-            {
-                var actionContextAccessor = provider.GetRequiredService<IActionContextAccessor>();
-                var factory = provider.GetRequiredService<IUrlHelperFactory>();
-                return factory?.GetUrlHelper(actionContextAccessor.ActionContext);
-            });
-
+            
             // Setup Request localization
             services.Configure<RequestLocalizationOptions>(options =>
             {
@@ -87,6 +70,24 @@ namespace AspNetCore.Routing.Translation.Extensions
                     Options = options
                 });
             });
+
+            // Inject required services
+            services.AddRouting();
+            services.AddSingleton<IRouteService, RouteService>();
+            services.AddSingleton<TranslationTransformer>();
+
+            var serviceProvider = services.BuildServiceProvider();
+            var defaultLinkGenerator = serviceProvider.GetRequiredService<LinkGenerator>();
+
+            services.Replace(new ServiceDescriptor(
+                typeof(LinkGenerator),
+                provider =>
+                {
+                    var routeService = provider.GetService<IRouteService>();
+                    var requestLocalizationOptions = provider.GetService<IOptions<RequestLocalizationOptions>>();
+                    return new LocalizedLinkGenerator(defaultLinkGenerator, routeService, requestLocalizationOptions);
+                },
+                ServiceLifetime.Singleton));
         }
 
         /// <summary>

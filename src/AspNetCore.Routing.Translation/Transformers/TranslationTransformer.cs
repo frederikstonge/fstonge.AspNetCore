@@ -27,7 +27,7 @@ namespace AspNetCore.Routing.Translation.Transformers
                 return new ValueTask<RouteValueDictionary>(Task.FromResult(values));
             }
             
-            var culture = values.ContainsKey(RouteValue.Culture) 
+            var culture = values.ContainsKey(RouteValue.Culture)
                 ? (string)values[RouteValue.Culture]
                 : _transOptions.DefaultRequestCulture.Culture.ToString();
             
