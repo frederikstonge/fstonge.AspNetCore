@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using AspNetCore.Routing.Translation.Models;
@@ -38,7 +37,7 @@ namespace AspNetCore.Routing.Translation.Helpers
         {
             var controllerName = (string)values[RouteValue.Controller];
             var actionName = (string)values[RouteValue.Action];
-            RewriteValuesDictionary(values, ambientValues);
+            RewriteValuesDictionary(values);
             var customUrl = GenerateCustomUrl(controllerName, actionName, values, fragment);
             if (!string.IsNullOrEmpty(customUrl))
             {
@@ -87,7 +86,7 @@ namespace AspNetCore.Routing.Translation.Helpers
         {
             var controllerName = (string)values[RouteValue.Controller];
             var actionName = (string)values[RouteValue.Action];
-            RewriteValuesDictionary(values, ambientValues);
+            RewriteValuesDictionary(values);
             var customUrl = GenerateCustomUrl(controllerName, actionName, values, fragment);
             if (!string.IsNullOrEmpty(customUrl))
             {
@@ -127,7 +126,7 @@ namespace AspNetCore.Routing.Translation.Helpers
             return _linkGenerator.GetUriByAddress(address, values, scheme, host, pathBase, fragment, options);
         }
 
-        private void RewriteValuesDictionary(RouteValueDictionary values, RouteValueDictionary ambiantValues = null)
+        private void RewriteValuesDictionary(RouteValueDictionary values)
         {
             var currentCulture = GetCultureValue(values);
             if (!string.IsNullOrEmpty(currentCulture) &&
@@ -151,24 +150,6 @@ namespace AspNetCore.Routing.Translation.Helpers
                 controllerValue,
                 actionValue,
                 currentCulture);
-            }
-
-            if (ambiantValues != null && ambiantValues.ContainsKey(RouteValue.Id) && !values.ContainsKey(RouteValue.Id))
-            {
-                var ambiantController = ambiantValues.GetValueOrDefault(RouteValue.Controller);
-                var ambiantAction = ambiantValues.GetValueOrDefault(RouteValue.Action);
-
-                if (ambiantController != null &&
-                    ambiantAction != null &&
-                    ambiantController.Equals(controllerValue) &&
-                    ambiantAction.Equals(actionValue))
-                {
-                    var ambiantId = ambiantValues[RouteValue.Id]?.ToString();
-                    if (!string.IsNullOrEmpty(ambiantId))
-                    {
-                        values[RouteValue.Id] = ambiantId;
-                    }
-                }
             }
         }
         
