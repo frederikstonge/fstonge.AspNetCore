@@ -163,7 +163,11 @@ namespace AspNetCore.Routing.Translation.Helpers
                     ambiantController.Equals(controllerValue) &&
                     ambiantAction.Equals(actionValue))
                 {
-                    values[RouteValue.Id] = ambiantValues[RouteValue.Id];
+                    var ambiantId = ambiantValues[RouteValue.Id].ToString();
+                    if (!string.IsNullOrEmpty(ambiantId))
+                    {
+                        values[RouteValue.Id] = ambiantId;
+                    }
                 }
             }
         }

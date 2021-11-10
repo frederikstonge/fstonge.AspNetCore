@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using AspNetCore.Routing.Translation.Filters;
@@ -94,20 +95,23 @@ namespace AspNetCore.Routing.Translation.Extensions
         /// Setup Request localization, Rewriter and Routing
         /// </summary>
         /// <param name="app">Application builder</param>
-        public static void UseRoutingLocalization(this IApplicationBuilder app)
+        /// <param name="rewriteRules">Rewrite rules</param>
+        /// <param name="redirectRules">Redirect rules</param>
+        public static void UseRoutingLocalization(this IApplicationBuilder app, IEnumerable<RewriteRule> rewriteRules = null, IEnumerable<RedirectRule> redirectRules = null)
         {
             // Use Request localization
             var locOptions = app.ApplicationServices.GetRequiredService<IOptions<RequestLocalizationOptions>>();
             app.UseRequestLocalization(locOptions.Value);
 
+            var rewriteOptions = new RewriteOptions();
+            
             var translationRouteRules = app.ApplicationServices.GetServices<ICustomTranslation>().ToList();
             if (translationRouteRules.Any())
             {
                 // Use Rewrite rules
                 var routeService = app.ApplicationServices.GetRequiredService<IRouteService>();
                 routeService.RouteRules.AddRange(translationRouteRules);
-
-                var rewriteOptions = new RewriteOptions();
+                
                 foreach (var routeRule in routeService.RouteRules)
                 {
                     foreach (var rewriteRule in routeRule.RewriteRules)
@@ -118,10 +122,40 @@ namespace AspNetCore.Routing.Translation.Extensions
                             rewriteRule.SkipRemainingRules);
                     }
                 }
-
-                app.UseRewriter(rewriteOptions);
             }
 
+            if (rewriteRules != null)
+            {
+                foreach (var rewriteRule in rewriteRules)
+                {
+                    rewriteOptions.AddRewrite(
+                        rewriteRule.Regex,
+                        rewriteRule.Replacement,
+                        rewriteRule.SkipRemainingRules);
+                }
+            }
+            
+            if (redirectRules != null)
+            {
+                foreach (var redirectRule in redirectRules)
+                {
+                    if (redirectRule.StatusCode.HasValue)
+                    {
+                        rewriteOptions.AddRedirect(
+                            redirectRule.Regex,
+                            redirectRule.Replacement,
+                            redirectRule.StatusCode.Value);
+                    }
+                    else
+                    {
+                        rewriteOptions.AddRedirect(
+                            redirectRule.Regex,
+                            redirectRule.Replacement);
+                    }
+                }
+            }
+
+            app.UseRewriter(rewriteOptions);
             app.UseRouting();
         }
         
