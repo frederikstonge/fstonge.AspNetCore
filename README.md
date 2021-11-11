@@ -40,7 +40,7 @@ You need to add the following structure in your appsettings:
 {
   "RoutingTranslation":
   {
-    "SupportedCultures":[ "fr", "en" ],
+    "SupportedCultures": "fr, en",
     "DefaultCulture": "fr"
   }
 }

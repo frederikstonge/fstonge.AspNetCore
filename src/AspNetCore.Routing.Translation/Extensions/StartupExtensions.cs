@@ -46,8 +46,8 @@ namespace AspNetCore.Routing.Translation.Extensions
             configuration.GetSection(RoutingTranslationOptions.RoutingTranslation).Bind(translationRoutingOptions);
             
             if (string.IsNullOrEmpty(translationRoutingOptions.DefaultCulture) ||
-                translationRoutingOptions.SupportedCultures == null ||
-                !translationRoutingOptions.SupportedCultures.Contains(translationRoutingOptions.DefaultCulture))
+                translationRoutingOptions.GetSupportedCultures() == null ||
+                !translationRoutingOptions.GetSupportedCultures().Contains(translationRoutingOptions.DefaultCulture))
             {
                 throw new InvalidOperationException("Supported cultures must contain the default culture.");
             }
@@ -55,7 +55,7 @@ namespace AspNetCore.Routing.Translation.Extensions
             // Setup Request localization
             services.Configure<RequestLocalizationOptions>(options =>
             {
-                var supportedCultures = translationRoutingOptions.SupportedCultures
+                var supportedCultures = translationRoutingOptions.GetSupportedCultures()
                     .Select(l => new CultureInfo(l))
                     .ToList();
                 
@@ -97,7 +97,10 @@ namespace AspNetCore.Routing.Translation.Extensions
         /// <param name="app">Application builder</param>
         /// <param name="rewriteRules">Rewrite rules</param>
         /// <param name="redirectRules">Redirect rules</param>
-        public static void UseRoutingLocalization(this IApplicationBuilder app, IEnumerable<RewriteRule> rewriteRules = null, IEnumerable<RedirectRule> redirectRules = null)
+        public static void UseRoutingLocalization(
+            this IApplicationBuilder app,
+            IEnumerable<RewriteRule> rewriteRules = null,
+            IEnumerable<RedirectRule> redirectRules = null)
         {
             // Use Request localization
             var locOptions = app.ApplicationServices.GetRequiredService<IOptions<RequestLocalizationOptions>>();
@@ -167,7 +170,7 @@ namespace AspNetCore.Routing.Translation.Extensions
         {
             var transOptions = app.ApplicationServices.GetRequiredService<IOptions<RequestLocalizationOptions>>();
 
-            if (transOptions.Value.SupportedCultures.Count > 1)
+            if (transOptions.Value.SupportedCultures!.Count > 1)
             {
                 var cultureRegex =
                     new RegexRouteConstraint(
