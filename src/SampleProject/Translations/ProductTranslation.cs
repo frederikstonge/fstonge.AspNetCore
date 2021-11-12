@@ -1,5 +1,4 @@
-﻿using AspNetCore.Routing.Translation.Extensions;
-using AspNetCore.Routing.Translation.Models;
+﻿using AspNetCore.Routing.Translation.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Options;
 
@@ -32,15 +31,15 @@ namespace SampleProject.Translations
             (values, _) =>
             {
                 var culture = _options.SupportedCultures.Count > 1
-                    ? $"{values.GetParameterValue(RouteValue.Culture)}/"
+                    ? $"{values[RouteValue.Culture]}/"
                     : string.Empty;
                 
                 return "/" +
                    $"{culture}" +
-                   $"{values.GetParameterValue(RouteValue.Controller)}/" + 
+                   $"{values[RouteValue.Controller]}/" + 
                    "10-control-and-testing/" +
                    "14-testing-string/" +
-                   $"p-{values.GetParameterValue(RouteValue.Id)}-testing-product-string";
+                   $"p-{values[RouteValue.Id]}-testing-product-string";
         };
     }
 }

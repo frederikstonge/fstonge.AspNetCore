@@ -130,7 +130,7 @@ namespace AspNetCore.Routing.Translation.Helpers
         {
             var currentCulture = GetCultureValue(values);
             if (!string.IsNullOrEmpty(currentCulture) &&
-                _requestLocalizationOptions.Value.SupportedCultures.Count > 1)
+                _requestLocalizationOptions.Value.SupportedCultures!.Count > 1)
             {
                 values[RouteValue.Culture] = currentCulture;
             }
