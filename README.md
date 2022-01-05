@@ -91,16 +91,15 @@ public class ProductTranslation : ICustomTranslation
             "$1/$2/detail/$3")
     };
     
-    public ICustomTranslation.GenerateUrlPath GenerateUrlPathCallback => 
-        (values, fragment) =>
-        {
-            return "/" +
-               $"{values.GetParameterValue(RouteValue.Culture)}/" +
-               $"{values.GetParameterValue(RouteValue.Controller)}/" + 
-               "10-control-and-testing/" +
-               "14-testing-string/" +
-               $"p-{values.GetParameterValue(RouteValue.Id)}-testing-product-string";
-    };
+     public string GenerateUrlPath(RouteValueDictionary values, FragmentString fragment)
+    {
+        return "/" +
+           $"{values.GetParameterValue(RouteValue.Culture)}/" +
+           $"{values.GetParameterValue(RouteValue.Controller)}/" + 
+           "10-control-and-testing/" +
+           "14-testing-string/" +
+           $"p-{values.GetParameterValue(RouteValue.Id)}-testing-product-string";
+    }
 }
 ```
 Then add it as a singleton in Startup.cs:

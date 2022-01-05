@@ -1,5 +1,7 @@
 ﻿using AspNetCore.Routing.Translation.Models;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Options;
 
 namespace SampleProject.Translations
@@ -26,20 +28,19 @@ namespace SampleProject.Translations
                     @"^([^\/]+)\/[-\/a-zA-Z0-9]+\/p-([=._a-zA-Z0-9]+)-.*$",
                     "$1/detail/$2")
         };
-        
-        public ICustomTranslation.GenerateUrlPath GenerateUrlPathCallback => 
-            (values, _) =>
-            {
-                var culture = _options.SupportedCultures.Count > 1
-                    ? $"{values[RouteValue.Culture]}/"
-                    : string.Empty;
+
+        public string GenerateUrlPath(RouteValueDictionary values, FragmentString fragment)
+        {
+            var culture = _options.SupportedCultures.Count > 1
+                ? $"{values[RouteValue.Culture]}/"
+                : string.Empty;
                 
-                return "/" +
+            return "/" +
                    $"{culture}" +
                    $"{values[RouteValue.Controller]}/" + 
                    "10-control-and-testing/" +
                    "14-testing-string/" +
                    $"p-{values[RouteValue.Id]}-testing-product-string";
-        };
+        }
     }
 }

@@ -181,9 +181,7 @@ namespace AspNetCore.Routing.Translation.Helpers
                 return null;
             }
             
-            return rule.GenerateUrlPathCallback(
-                values,
-                fragment);
+            return rule.GenerateUrlPath(values, fragment);
         }
     }
 }
