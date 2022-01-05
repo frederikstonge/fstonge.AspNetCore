@@ -76,11 +76,12 @@ namespace AspNetCore.Routing.Translation.Services
 
         public string GetActionName(string controllerName, string translatedName, string currentCulture)
         {
-            if (_translatedActions.Any(c => c.Value.Any(a =>
-                a.Value.Equals(translatedName, StringComparison.OrdinalIgnoreCase) &&
-                a.Culture.Equals(currentCulture, StringComparison.OrdinalIgnoreCase))))
+            var prefix = $"{controllerName}/";
+            if (_translatedActions.Any(c => c.Key.StartsWith(prefix, StringComparison.OrdinalIgnoreCase) &&
+                                            c.Value.Any(a =>
+                                                a.Value.Equals(translatedName, StringComparison.OrdinalIgnoreCase) &&
+                                                a.Culture.Equals(currentCulture, StringComparison.OrdinalIgnoreCase))))
             {
-                var prefix = $"{controllerName}/";
                 var action = _translatedActions.FirstOrDefault(c => c.Key.StartsWith(prefix, StringComparison.OrdinalIgnoreCase) &&
                                                                     c.Value.Any(a =>
                                                                         a.Value.Equals(translatedName, StringComparison.OrdinalIgnoreCase) &&
