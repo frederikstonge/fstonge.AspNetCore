@@ -4,7 +4,6 @@ using AspNetCore.Routing.Translation.Extensions;
 using AspNetCore.Routing.Translation.Models;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.Extensions.Configuration;
-using SampleProject.Filters;
 using SampleProject.Translations;
 
 namespace SampleProject
@@ -24,9 +23,6 @@ namespace SampleProject
             {
                 // Add filter to set current filter in cookies
                 options.AddCultureCookieFilter();
-                
-                // Set current language of user in a session somewhere
-                options.Filters.Add<SetLanguageActionFilter>();
             });
             
             // Add localization for resources, views and data annotations
