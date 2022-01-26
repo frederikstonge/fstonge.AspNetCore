@@ -19,11 +19,8 @@ namespace AspNetCore.Routing.Translation.Controllers
         public IActionResult Index()
         {
             var rqf = Request.HttpContext.Features.Get<IRequestCultureFeature>();
-            var culture = rqf.RequestCulture.Culture;
-            
-            var currentCulture = _options.SupportedCultures
-                                     .FirstOrDefault(c => c.Equals(culture))
-                                 ?? _options.DefaultRequestCulture.Culture;
+            var culture = rqf?.RequestCulture.Culture ?? _options.DefaultRequestCulture.Culture;
+            var currentCulture = _options.SupportedCultures?.FirstOrDefault(c => c.Equals(culture)) ?? culture;
             
             return Redirect($"/{currentCulture}/");
         }
