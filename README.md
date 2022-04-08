@@ -17,7 +17,7 @@ public void ConfigureServices(IServiceCollection services)
     builder.AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix);
     builder.AddDataAnnotationsLocalization();
 
-    // Inject required services, add routing and replace current UrlHelperFactory
+    // Inject required services, add routing and replace current LinkGenerator
     services.AddRoutingLocalization(_configuration);
 }
 ```
@@ -91,7 +91,7 @@ public class ProductTranslation : ICustomTranslation
             "$1/$2/detail/$3")
     };
     
-     public string GenerateUrlPath(RouteValueDictionary values, FragmentString fragment)
+    public string GenerateUrlPath(RouteValueDictionary values, FragmentString fragment)
     {
         return "/" +
            $"{values.GetParameterValue(RouteValue.Culture)}/" +
@@ -102,11 +102,11 @@ public class ProductTranslation : ICustomTranslation
     }
 }
 ```
-Then add it as a singleton in Startup.cs:
+Then add it as a scoped in Startup.cs:
 ```c#
 // Add custom translations as singleton
 public void ConfigureServices(IServiceCollection services)
 {
-    services.AddSingleton<ICustomTranslation, ProductTranslation>();
+    services.AddScoped<ICustomTranslation, ProductTranslation>();
 }
 ```

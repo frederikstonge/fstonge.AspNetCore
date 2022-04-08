@@ -30,10 +30,10 @@ namespace SampleProject
             builder.AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix);
             builder.AddDataAnnotationsLocalization();
             
-            // Add custom translations as singleton
-            services.AddSingleton<ICustomTranslation, ProductTranslation>();
+            // Add custom translations as scoped
+            services.AddScoped<ICustomTranslation, ProductTranslation>();
             
-            // Inject required services, add routing and replace current UrlHelperFactory
+            // Inject required services, add routing and replace current LinkGenerator
             services.AddRoutingLocalization(_configuration);
         }
 

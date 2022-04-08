@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using AspNetCore.Routing.Translation.Attributes;
-using AspNetCore.Routing.Translation.Models;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 
@@ -18,8 +17,6 @@ namespace AspNetCore.Routing.Translation.Services
             _translatedControllers = GetTranslatedControllers(actionDescriptorCollectionProvider);
             _translatedActions = GetTranslatedActions(actionDescriptorCollectionProvider);
         }
-        
-        public List<ICustomTranslation> RouteRules { get; } = new List<ICustomTranslation>();
 
         public string GetControllerTranslatedValue(string controllerName, string culture)
         {

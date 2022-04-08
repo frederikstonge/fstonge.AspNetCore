@@ -86,9 +86,14 @@ namespace AspNetCore.Routing.Translation.Extensions
                 {
                     var routeService = provider.GetService<IRouteService>();
                     var requestLocalizationOptions = provider.GetService<IOptions<RequestLocalizationOptions>>();
-                    return new LocalizedLinkGenerator(defaultLinkGenerator, routeService, requestLocalizationOptions);
+                    var customRules = provider.GetServices<ICustomTranslation>();
+                    return new LocalizedLinkGenerator(
+                        defaultLinkGenerator,
+                        routeService,
+                        requestLocalizationOptions,
+                        customRules);
                 },
-                ServiceLifetime.Singleton));
+                ServiceLifetime.Scoped));
         }
 
         /// <summary>
@@ -107,15 +112,12 @@ namespace AspNetCore.Routing.Translation.Extensions
             app.UseRequestLocalization(locOptions.Value);
 
             var rewriteOptions = new RewriteOptions();
-            
-            var translationRouteRules = app.ApplicationServices.GetServices<ICustomTranslation>().ToList();
+
+            using var scope = app.ApplicationServices.CreateScope();
+            var translationRouteRules = scope.ServiceProvider.GetServices<ICustomTranslation>().ToList();
             if (translationRouteRules.Any())
             {
-                // Use Rewrite rules
-                var routeService = app.ApplicationServices.GetRequiredService<IRouteService>();
-                routeService.RouteRules.AddRange(translationRouteRules);
-                
-                foreach (var routeRule in routeService.RouteRules)
+                foreach (var routeRule in translationRouteRules)
                 {
                     foreach (var rewriteRule in routeRule.RewriteRules)
                     {

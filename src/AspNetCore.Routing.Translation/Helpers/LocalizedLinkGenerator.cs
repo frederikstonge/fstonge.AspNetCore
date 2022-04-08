@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using AspNetCore.Routing.Translation.Models;
@@ -15,15 +16,18 @@ namespace AspNetCore.Routing.Translation.Helpers
         private readonly LinkGenerator _linkGenerator;
         private readonly IRouteService _routeService;
         private readonly IOptions<RequestLocalizationOptions> _requestLocalizationOptions;
+        private readonly List<ICustomTranslation> _customRoutes;
 
         public LocalizedLinkGenerator(
             LinkGenerator linkGenerator,
             IRouteService routeService,
-            IOptions<RequestLocalizationOptions> requestLocalizationOptions)
+            IOptions<RequestLocalizationOptions> requestLocalizationOptions,
+            IEnumerable<ICustomTranslation> customRoutes)
         {
             _linkGenerator = linkGenerator;
             _routeService = routeService;
             _requestLocalizationOptions = requestLocalizationOptions;
+            _customRoutes = customRoutes.ToList();
         }
 
         public override string GetPathByAddress<TAddress>(
@@ -170,7 +174,7 @@ namespace AspNetCore.Routing.Translation.Helpers
             RouteValueDictionary values,
             FragmentString fragment = default)
         {
-            var rules = _routeService.RouteRules.Where(r =>
+            var rules = _customRoutes.Where(r =>
                 r.ControllerName.Equals(controllerName, StringComparison.OrdinalIgnoreCase)).ToList();
             
             var rule = rules.FirstOrDefault(r => r.ActionName.Equals(actionName, StringComparison.OrdinalIgnoreCase)) ??
