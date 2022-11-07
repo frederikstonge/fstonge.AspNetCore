@@ -36,7 +36,8 @@ namespace AspNetCore.Routing.Translation.Transformers
             values[RouteValue.Controller] = controllerName;
 
             var action = (string)values[RouteValue.Action];
-            values[RouteValue.Action] = _routeService.GetActionName(controllerName, action, culture);
+            var actionName = _routeService.GetActionName(controllerName, action, culture);
+            values[RouteValue.Action] = actionName;
             return new ValueTask<RouteValueDictionary>(Task.FromResult(values));
         }
     }

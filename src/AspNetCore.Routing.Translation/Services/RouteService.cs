@@ -37,20 +37,20 @@ namespace AspNetCore.Routing.Translation.Services
             return controllerName.ToLowerInvariant();
         }
 
-        public string GetControllerName(string translatedName, string currentCulture)
+        public string GetControllerName(string translatedControllerName, string currentCulture)
         {
             if (_translatedControllers.Any(c => c.Value.Any(a =>
-                a.Value.Equals(translatedName, StringComparison.OrdinalIgnoreCase) &&
+                a.Value.Equals(translatedControllerName, StringComparison.OrdinalIgnoreCase) &&
                 a.Culture.Equals(currentCulture, StringComparison.OrdinalIgnoreCase))))
             {
                 var controller = _translatedControllers.FirstOrDefault(c => c.Value.Any(a =>
-                    a.Value.Equals(translatedName, StringComparison.OrdinalIgnoreCase) &&
+                    a.Value.Equals(translatedControllerName, StringComparison.OrdinalIgnoreCase) &&
                     a.Culture.Equals(currentCulture, StringComparison.OrdinalIgnoreCase)));
 
                 return controller.Key;
             }
 
-            return translatedName.ToLowerInvariant();
+            return translatedControllerName.ToLowerInvariant();
         }
 
         public string GetActionTranslatedValue(string controllerName, string actionName, string culture)
@@ -71,23 +71,23 @@ namespace AspNetCore.Routing.Translation.Services
             return actionName.ToLowerInvariant();
         }
 
-        public string GetActionName(string controllerName, string translatedName, string currentCulture)
+        public string GetActionName(string controllerName, string translatedActionName, string currentCulture)
         {
             var prefix = $"{controllerName}/";
             if (_translatedActions.Any(c => c.Key.StartsWith(prefix, StringComparison.OrdinalIgnoreCase) &&
                                             c.Value.Any(a =>
-                                                a.Value.Equals(translatedName, StringComparison.OrdinalIgnoreCase) &&
+                                                a.Value.Equals(translatedActionName, StringComparison.OrdinalIgnoreCase) &&
                                                 a.Culture.Equals(currentCulture, StringComparison.OrdinalIgnoreCase))))
             {
                 var action = _translatedActions.FirstOrDefault(c => c.Key.StartsWith(prefix, StringComparison.OrdinalIgnoreCase) &&
                                                                     c.Value.Any(a =>
-                                                                        a.Value.Equals(translatedName, StringComparison.OrdinalIgnoreCase) &&
+                                                                        a.Value.Equals(translatedActionName, StringComparison.OrdinalIgnoreCase) &&
                                                                         a.Culture.Equals(currentCulture, StringComparison.OrdinalIgnoreCase)));
                 
                 return action.Key.Substring(prefix.Length, action.Key.Length - prefix.Length);
             }
 
-            return translatedName.ToLowerInvariant();
+            return translatedActionName.ToLowerInvariant();
         }
 
         private Dictionary<string, IEnumerable<TranslateAttribute>> GetTranslatedControllers(IActionDescriptorCollectionProvider provider)

@@ -174,9 +174,8 @@ namespace AspNetCore.Routing.Translation.Extensions
 
             if (transOptions.Value.SupportedCultures!.Count > 1)
             {
-                var cultureRegex =
-                    new RegexRouteConstraint(
-                        $"^({string.Join('|', transOptions.Value.SupportedCultures)})?$");
+                var culturePattern = $"^({string.Join('|', transOptions.Value.SupportedCultures)})?$";
+                var cultureRegex = new RegexRouteConstraint(culturePattern);
 
                 app.UseEndpoints(endpoints =>
                 {
@@ -193,7 +192,7 @@ namespace AspNetCore.Routing.Translation.Extensions
                         pattern: "{controller=Redirect}/{action=Index}/{*id}");
 
                     endpoints.MapDynamicControllerRoute<TranslationTransformer>(
-                        "{culture}/{controller=home}/{action=index}/{*id}");
+                        $"{{culture:regex({culturePattern})}}/{{controller=home}}/{{action=index}}/{{*id}}");
                 });
             }
             else
