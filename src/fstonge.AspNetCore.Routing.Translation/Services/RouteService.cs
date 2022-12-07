@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using AspNetCore.Routing.Translation.Attributes;
+using fstonge.AspNetCore.Routing.Translation.Attributes;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 
-namespace AspNetCore.Routing.Translation.Services
+namespace fstonge.AspNetCore.Routing.Translation.Services
 {
     internal class RouteService : IRouteService
     {
@@ -33,7 +33,7 @@ namespace AspNetCore.Routing.Translation.Services
                     return attribute.Value;
                 }
             }
-            
+
             return controllerName.ToLowerInvariant();
         }
 
@@ -67,7 +67,7 @@ namespace AspNetCore.Routing.Translation.Services
                     return attribute.Value;
                 }
             }
-            
+
             return actionName.ToLowerInvariant();
         }
 
@@ -83,21 +83,21 @@ namespace AspNetCore.Routing.Translation.Services
                                                                     c.Value.Any(a =>
                                                                         a.Value.Equals(translatedActionName, StringComparison.OrdinalIgnoreCase) &&
                                                                         a.Culture.Equals(currentCulture, StringComparison.OrdinalIgnoreCase)));
-                
-                return action.Key.Substring(prefix.Length, action.Key.Length - prefix.Length);
+
+                return action.Key[prefix.Length..];
             }
 
             return translatedActionName.ToLowerInvariant();
         }
 
-        private Dictionary<string, IEnumerable<TranslateAttribute>> GetTranslatedControllers(IActionDescriptorCollectionProvider provider)
+        private static Dictionary<string, IEnumerable<TranslateAttribute>> GetTranslatedControllers(IActionDescriptorCollectionProvider provider)
         {
             var dictionary = new Dictionary<string, IEnumerable<TranslateAttribute>>();
-            
+
             var items = provider.ActionDescriptors.Items
                 .OfType<ControllerActionDescriptor>()
                 .Where(c => c.ControllerTypeInfo.GetCustomAttributes(typeof(TranslateAttribute), true).Any()).ToList();
-            
+
             foreach (var item in items)
             {
                 dictionary.TryAdd(
@@ -108,15 +108,15 @@ namespace AspNetCore.Routing.Translation.Services
 
             return dictionary;
         }
-        
-        private Dictionary<string, IEnumerable<TranslateAttribute>> GetTranslatedActions(IActionDescriptorCollectionProvider provider)
+
+        private static Dictionary<string, IEnumerable<TranslateAttribute>> GetTranslatedActions(IActionDescriptorCollectionProvider provider)
         {
             var dictionary = new Dictionary<string, IEnumerable<TranslateAttribute>>();
-            
+
             var items = provider.ActionDescriptors.Items
                 .OfType<ControllerActionDescriptor>()
                 .Where(c => c.MethodInfo.GetCustomAttributes(typeof(TranslateAttribute), true).Any()).ToList();
-            
+
             foreach (var item in items)
             {
                 dictionary.TryAdd(

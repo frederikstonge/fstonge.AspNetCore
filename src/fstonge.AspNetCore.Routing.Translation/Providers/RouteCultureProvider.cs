@@ -6,12 +6,12 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Localization;
 
-namespace AspNetCore.Routing.Translation.Providers
+namespace fstonge.AspNetCore.Routing.Translation.Providers
 {
     public class RouteCultureProvider : RequestCultureProvider
     {
-        private static readonly Regex CultureRegex = new Regex(@"^\/([-a-zA-Z]+).*$");
-        
+        private static readonly Regex CultureRegex = new (@"^\/([-a-zA-Z]+).*$");
+
         public override async Task<ProviderCultureResult> DetermineProviderCultureResult(HttpContext httpContext)
         {
             if (httpContext == null)

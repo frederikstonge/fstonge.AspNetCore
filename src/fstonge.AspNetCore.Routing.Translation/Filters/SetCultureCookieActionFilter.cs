@@ -7,17 +7,17 @@ using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Options;
 
-namespace AspNetCore.Routing.Translation.Filters
+namespace fstonge.AspNetCore.Routing.Translation.Filters
 {
     internal class SetCultureCookieActionFilter : IAsyncActionFilter
     {
         private readonly RequestLocalizationOptions _options;
-        
+
         public SetCultureCookieActionFilter(IOptions<RequestLocalizationOptions> options)
         {
             _options = options.Value;
         }
-        
+
         public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
         {
             var rqf = context.HttpContext.Request.HttpContext.Features.Get<IRequestCultureFeature>();
@@ -25,7 +25,7 @@ namespace AspNetCore.Routing.Translation.Filters
             var currentCulture = _options.SupportedCultures
                                      .FirstOrDefault(c => c.Equals(culture))
                                  ?? _options.DefaultRequestCulture.Culture;
-            
+
             context.HttpContext.Response.Cookies.Append(
                 CookieRequestCultureProvider.DefaultCookieName,
                 CookieRequestCultureProvider.MakeCookieValue(new RequestCulture(currentCulture)),

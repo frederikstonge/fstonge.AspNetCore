@@ -3,8 +3,8 @@
         <PackageId>fstonge.AspNetCore.Routing.Translation</PackageId>
         <Title>AspNetCore Routing Translation</Title>
         <Description>Translate routes easily on your mvc app</Description>
-        <PackageProjectUrl>https://github.com/frederikstonge/AspNetCore-Routing-Translation</PackageProjectUrl>
-        <TargetFrameworks>net6.0;net5.0</TargetFrameworks>
+		<PackageProjectUrl>https://github.com/frederikstonge/fstonge.AspNetCore</PackageProjectUrl>
+        <TargetFrameworks>net7.0;net6.0;net5.0</TargetFrameworks>
         <Version>1.3.0</Version>
         <Authors>Frederik St-Onge</Authors>
         <Product>AspNetCore Routing Translation</Product>

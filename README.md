@@ -1,8 +1,10 @@
 
-# ASP.NET Core endpoint route localization and translation
+# ASP.NET Core Utilities
 
-## How to use it:
-### In Startup.cs
+## Route translations
+
+### How to use it:
+#### In Startup.cs
 Under ConfigureServices, you need to add the following:
 ```c#
 public void ConfigureServices(IServiceCollection services)
@@ -34,7 +36,7 @@ public void Configure(IApplicationBuilder app)
 }
 ```
 
-### In appsettings.json
+#### In appsettings.json
 You need to add the following structure in your appsettings:
 ```json
 {
@@ -46,7 +48,7 @@ You need to add the following structure in your appsettings:
 }
 ```
 
-### Attribute in Controllers
+#### Attribute in Controllers
 ```c#
 [Translate("en", "orders")]
 [Translate("fr", "commandes")]
@@ -60,7 +62,7 @@ public class OrdersController : Controller
 }
 ```
 
-### Generate your first urls
+#### Generate your first urls
 ```c#
 <form asp-controller="orders" asp-action="list"></form>
 
@@ -69,13 +71,13 @@ public class OrdersController : Controller
 <a asp-route-culture="fr">French</a>
 ```
 
-## Options
+### Options
 You can inject an IOptions that contains your configured cultures. Use the following:
 ```c#
 IOptions<RequestLocalizationOptions> options
 ```
 
-## Custom route translation
+### Custom route translation
 You can create your own custom validation by deriving from ICustomTranslation:
 ```c#
 public class ProductTranslation : ICustomTranslation
@@ -108,5 +110,37 @@ Then add it as a scoped in Startup.cs:
 public void ConfigureServices(IServiceCollection services)
 {
     services.AddScoped<ICustomTranslation, ProductTranslation>();
+}
+```
+
+## Async Distribued Session
+
+### How to use it:
+#### In Startup.cs
+Under ConfigureServices, you need to add the following:
+```c#
+public void ConfigureServices(IServiceCollection services)
+{
+    var builder = services.AddControllersWithViews();
+    
+    // Store temp data in session
+    builder.AddSessionStateTempDataProvider();
+
+    // Add any distributed cache (this is in memory, but I can be Redis or others)
+    services.AddDistributedMemoryCache();
+
+    // Use the package to use the async distributed session
+    services.AddAsyncDistributedSession();
+}
+```
+Under Configure, you need to add the following:
+```c#
+public void Configure(IApplicationBuilder app)
+{
+    
+    // Setup async distributed session
+    app.UseAsyncDistributedSession();
+
+    app.UseEndpoints();
 }
 ```

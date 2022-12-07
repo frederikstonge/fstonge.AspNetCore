@@ -1,0 +1,23 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<PackageId>fstonge.AspNetCore.Session.Distributed</PackageId>
+		<Title>AspNetCore Session Distributed</Title>
+		<Description>Load distributed session asynchronously</Description>
+		<PackageProjectUrl>https://github.com/frederikstonge/fstonge.AspNetCore</PackageProjectUrl>
+		<TargetFrameworks>net7.0;net6.0;net5.0</TargetFrameworks>
+		<Version>1.0.0</Version>
+		<Authors>Frederik St-Onge</Authors>
+		<Product>AspNetCore Routing Translation</Product>
+		<Copyright>Frederik St-Onge 2020</Copyright>
+		<CodeAnalysisRuleSet>../../stylecop.ruleset</CodeAnalysisRuleSet>
+	</PropertyGroup>
+	<ItemGroup>
+		<FrameworkReference Include="Microsoft.AspNetCore.App" />
+	</ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+	</ItemGroup>
+</Project>

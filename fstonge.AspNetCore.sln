@@ -1,20 +1,22 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.26124.0
+# Visual Studio Version 17
+VisualStudioVersion = 17.4.33122.133
 MinimumVisualStudioVersion = 15.0.26124.0
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{87DB390C-7EAD-4E95-9C18-31EE134013A5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SampleProject", "src\SampleProject\SampleProject.csproj", "{E62B31D2-4FDE-49FE-9009-BB34C8ECC73D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SampleProject", "src\SampleProject\SampleProject.csproj", "{E62B31D2-4FDE-49FE-9009-BB34C8ECC73D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AspNetCore.Routing.Translation", "src\AspNetCore.Routing.Translation\AspNetCore.Routing.Translation.csproj", "{4526D9BF-70D6-4726-8571-3C1883E94EE1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "fstonge.AspNetCore.Routing.Translation", "src\fstonge.AspNetCore.Routing.Translation\fstonge.AspNetCore.Routing.Translation.csproj", "{4526D9BF-70D6-4726-8571-3C1883E94EE1}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{3E971030-AE32-42F9-859F-F48ED8D733E2}"
-ProjectSection(SolutionItems) = preProject
-	.gitignore = .gitignore
-	README.md = README.md
-	stylecop.ruleset = stylecop.ruleset
-EndProjectSection
+	ProjectSection(SolutionItems) = preProject
+		.gitignore = .gitignore
+		README.md = README.md
+		stylecop.ruleset = stylecop.ruleset
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "fstonge.AspNetCore.Session.Distributed", "src\fstonge.AspNetCore.Session.Distributed\fstonge.AspNetCore.Session.Distributed.csproj", "{EE7633E9-9457-4C47-8D49-A5AD2B49FB1D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -24,9 +26,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 		Release|x64 = Release|x64
 		Release|x86 = Release|x86
-	EndGlobalSection
-	GlobalSection(SolutionProperties) = preSolution
-		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{E62B31D2-4FDE-49FE-9009-BB34C8ECC73D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -53,9 +52,28 @@ Global
 		{4526D9BF-70D6-4726-8571-3C1883E94EE1}.Release|x64.Build.0 = Release|Any CPU
 		{4526D9BF-70D6-4726-8571-3C1883E94EE1}.Release|x86.ActiveCfg = Release|Any CPU
 		{4526D9BF-70D6-4726-8571-3C1883E94EE1}.Release|x86.Build.0 = Release|Any CPU
+		{EE7633E9-9457-4C47-8D49-A5AD2B49FB1D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EE7633E9-9457-4C47-8D49-A5AD2B49FB1D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EE7633E9-9457-4C47-8D49-A5AD2B49FB1D}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{EE7633E9-9457-4C47-8D49-A5AD2B49FB1D}.Debug|x64.Build.0 = Debug|Any CPU
+		{EE7633E9-9457-4C47-8D49-A5AD2B49FB1D}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{EE7633E9-9457-4C47-8D49-A5AD2B49FB1D}.Debug|x86.Build.0 = Debug|Any CPU
+		{EE7633E9-9457-4C47-8D49-A5AD2B49FB1D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EE7633E9-9457-4C47-8D49-A5AD2B49FB1D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EE7633E9-9457-4C47-8D49-A5AD2B49FB1D}.Release|x64.ActiveCfg = Release|Any CPU
+		{EE7633E9-9457-4C47-8D49-A5AD2B49FB1D}.Release|x64.Build.0 = Release|Any CPU
+		{EE7633E9-9457-4C47-8D49-A5AD2B49FB1D}.Release|x86.ActiveCfg = Release|Any CPU
+		{EE7633E9-9457-4C47-8D49-A5AD2B49FB1D}.Release|x86.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{E62B31D2-4FDE-49FE-9009-BB34C8ECC73D} = {87DB390C-7EAD-4E95-9C18-31EE134013A5}
 		{4526D9BF-70D6-4726-8571-3C1883E94EE1} = {87DB390C-7EAD-4E95-9C18-31EE134013A5}
+		{EE7633E9-9457-4C47-8D49-A5AD2B49FB1D} = {87DB390C-7EAD-4E95-9C18-31EE134013A5}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {BC4E568D-849F-405F-A616-575ABA0C2B1D}
 	EndGlobalSection
 EndGlobal

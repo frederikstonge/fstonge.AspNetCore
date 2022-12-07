@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using AspNetCore.Routing.Translation.Filters;
-using AspNetCore.Routing.Translation.Helpers;
-using AspNetCore.Routing.Translation.Models;
-using AspNetCore.Routing.Translation.Providers;
-using AspNetCore.Routing.Translation.Services;
-using AspNetCore.Routing.Translation.Transformers;
+using fstonge.AspNetCore.Routing.Translation.Filters;
+using fstonge.AspNetCore.Routing.Translation.Helpers;
+using fstonge.AspNetCore.Routing.Translation.Models;
+using fstonge.AspNetCore.Routing.Translation.Providers;
+using fstonge.AspNetCore.Routing.Translation.Services;
+using fstonge.AspNetCore.Routing.Translation.Transformers;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc;
@@ -19,7 +19,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Options;
 
-namespace AspNetCore.Routing.Translation.Extensions
+namespace fstonge.AspNetCore.Routing.Translation.Extensions
 {
     public static class StartupExtensions
     {
@@ -31,7 +31,7 @@ namespace AspNetCore.Routing.Translation.Extensions
         {
             options.Filters.Add<SetCultureCookieActionFilter>();
         }
-        
+
         /// <summary>
         /// Inject required services, add routing and replace current UrlHelperFactory
         /// </summary>
@@ -44,25 +44,25 @@ namespace AspNetCore.Routing.Translation.Extensions
         {
             RoutingTranslationOptions translationRoutingOptions = new RoutingTranslationOptions();
             configuration.GetSection(RoutingTranslationOptions.RoutingTranslation).Bind(translationRoutingOptions);
-            
+
             if (string.IsNullOrEmpty(translationRoutingOptions.DefaultCulture) ||
                 translationRoutingOptions.GetSupportedCultures() == null ||
                 !translationRoutingOptions.GetSupportedCultures().Contains(translationRoutingOptions.DefaultCulture))
             {
                 throw new InvalidOperationException("Supported cultures must contain the default culture.");
             }
-            
+
             // Setup Request localization
             services.Configure<RequestLocalizationOptions>(options =>
             {
                 var supportedCultures = translationRoutingOptions.GetSupportedCultures()
                     .Select(l => new CultureInfo(l))
                     .ToList();
-                
+
                 options.DefaultRequestCulture = new RequestCulture(
-                    translationRoutingOptions.DefaultCulture, 
+                    translationRoutingOptions.DefaultCulture,
                     translationRoutingOptions.DefaultCulture);
-                
+
                 options.SupportedCultures = supportedCultures;
                 options.SupportedUICultures = supportedCultures;
 
@@ -122,7 +122,7 @@ namespace AspNetCore.Routing.Translation.Extensions
                     foreach (var rewriteRule in routeRule.RewriteRules)
                     {
                         rewriteOptions.AddRewrite(
-                            rewriteRule.Regex, 
+                            rewriteRule.Regex,
                             rewriteRule.Replacement,
                             rewriteRule.SkipRemainingRules);
                     }
@@ -139,7 +139,7 @@ namespace AspNetCore.Routing.Translation.Extensions
                         rewriteRule.SkipRemainingRules);
                 }
             }
-            
+
             if (redirectRules != null)
             {
                 foreach (var redirectRule in redirectRules)
@@ -163,7 +163,7 @@ namespace AspNetCore.Routing.Translation.Extensions
             app.UseRewriter(rewriteOptions);
             app.UseRouting();
         }
-        
+
         /// <summary>
         /// Preset the UseEndpoints with correct routes for culture
         /// </summary>
@@ -202,7 +202,7 @@ namespace AspNetCore.Routing.Translation.Extensions
                     endpoints.MapControllerRoute(
                         name: "default",
                         pattern: "{controller=home}/{action=index}/{*id}");
-                    
+
                     endpoints.MapDynamicControllerRoute<TranslationTransformer>(
                         "{controller=home}/{action=index}/{*id}");
                 });

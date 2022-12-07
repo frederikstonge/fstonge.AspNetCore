@@ -1,10 +1,11 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
-using AspNetCore.Routing.Translation.Extensions;
-using AspNetCore.Routing.Translation.Models;
+using fstonge.AspNetCore.Routing.Translation.Extensions;
+using fstonge.AspNetCore.Routing.Translation.Models;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.Extensions.Configuration;
 using SampleProject.Translations;
+using fstonge.AspNetCore.Session.Distributed.Extensions;
 
 namespace SampleProject
 {
@@ -24,7 +25,12 @@ namespace SampleProject
                 // Add filter to set current filter in cookies
                 options.AddCultureCookieFilter();
             });
-            
+
+            // Configure async distributed session
+            builder.AddSessionStateTempDataProvider();
+            services.AddDistributedMemoryCache();
+            services.AddAsyncDistributedSession();
+
             // Add localization for resources, views and data annotations
             services.AddLocalization(options => options.ResourcesPath = "Resources");
             builder.AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix);
@@ -39,6 +45,9 @@ namespace SampleProject
 
         public void Configure(IApplicationBuilder app)
         {
+            // Setup async distributed session
+            app.UseAsyncDistributedSession();
+
             // Setup Request localization, Rewriter and Routing
             app.UseRoutingLocalization();
             app.UseStaticFiles();

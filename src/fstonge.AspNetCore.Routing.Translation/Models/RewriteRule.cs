@@ -1,4 +1,4 @@
-﻿namespace AspNetCore.Routing.Translation.Models
+﻿namespace fstonge.AspNetCore.Routing.Translation.Models
 {
     public class RewriteRule
     {

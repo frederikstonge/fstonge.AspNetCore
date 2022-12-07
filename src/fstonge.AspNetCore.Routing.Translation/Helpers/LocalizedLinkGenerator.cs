@@ -2,14 +2,14 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using AspNetCore.Routing.Translation.Models;
-using AspNetCore.Routing.Translation.Services;
+using fstonge.AspNetCore.Routing.Translation.Models;
+using fstonge.AspNetCore.Routing.Translation.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Options;
 
-namespace AspNetCore.Routing.Translation.Helpers
+namespace fstonge.AspNetCore.Routing.Translation.Helpers
 {
     public sealed class LocalizedLinkGenerator : LinkGenerator
     {
@@ -47,13 +47,13 @@ namespace AspNetCore.Routing.Translation.Helpers
             {
                 return customUrl;
             }
-            
+
             return _linkGenerator.GetPathByAddress(
                 httpContext,
                 address,
                 values,
-                ambientValues, 
-                pathBase, 
+                ambientValues,
+                pathBase,
                 fragment,
                 options);
         }
@@ -73,7 +73,7 @@ namespace AspNetCore.Routing.Translation.Helpers
             {
                 return customUrl;
             }
-            
+
             return _linkGenerator.GetPathByAddress(address, values, pathBase, fragment, options);
         }
 
@@ -96,7 +96,7 @@ namespace AspNetCore.Routing.Translation.Helpers
             {
                 return customUrl;
             }
-            
+
             return _linkGenerator.GetUriByAddress(
                 httpContext,
                 address,
@@ -126,7 +126,7 @@ namespace AspNetCore.Routing.Translation.Helpers
             {
                 return customUrl;
             }
-            
+
             return _linkGenerator.GetUriByAddress(address, values, scheme, host, pathBase, fragment, options);
         }
 
@@ -156,7 +156,7 @@ namespace AspNetCore.Routing.Translation.Helpers
                 currentCulture);
             }
         }
-        
+
         private string GetCultureValue(RouteValueDictionary values)
         {
             var currentCulture = CultureInfo.CurrentCulture.ToString();
@@ -176,7 +176,7 @@ namespace AspNetCore.Routing.Translation.Helpers
         {
             var rules = _customRoutes.Where(r =>
                 r.ControllerName.Equals(controllerName, StringComparison.OrdinalIgnoreCase)).ToList();
-            
+
             var rule = rules.FirstOrDefault(r => r.ActionName.Equals(actionName, StringComparison.OrdinalIgnoreCase)) ??
                        rules.FirstOrDefault(r => r.ActionName == null);
 
@@ -184,7 +184,7 @@ namespace AspNetCore.Routing.Translation.Helpers
             {
                 return null;
             }
-            
+
             try
             {
                 return rule.GenerateUrlPath(values, fragment);

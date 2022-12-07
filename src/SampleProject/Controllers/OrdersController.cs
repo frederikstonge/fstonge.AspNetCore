@@ -1,5 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
-using AspNetCore.Routing.Translation.Attributes;
+using fstonge.AspNetCore.Routing.Translation.Attributes;
 
 namespace SampleProject.Controllers
 {
