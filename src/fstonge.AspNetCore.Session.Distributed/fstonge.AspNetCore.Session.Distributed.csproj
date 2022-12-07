@@ -4,6 +4,7 @@
 		<Title>AspNetCore Session Distributed</Title>
 		<Description>Load distributed session asynchronously</Description>
 		<PackageProjectUrl>https://github.com/frederikstonge/fstonge.AspNetCore</PackageProjectUrl>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
 		<TargetFrameworks>net7.0;net6.0;net5.0</TargetFrameworks>
 		<Version>1.0.0</Version>
 		<Authors>Frederik St-Onge</Authors>
@@ -19,5 +20,8 @@
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
+	</ItemGroup>
+	<ItemGroup>
+		<None Include="README.md" Pack="true" PackagePath="\"/>
 	</ItemGroup>
 </Project>

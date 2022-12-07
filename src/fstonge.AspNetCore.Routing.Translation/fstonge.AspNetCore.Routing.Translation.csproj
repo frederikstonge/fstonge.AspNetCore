@@ -4,6 +4,7 @@
         <Title>AspNetCore Routing Translation</Title>
         <Description>Translate routes easily on your mvc app</Description>
 		<PackageProjectUrl>https://github.com/frederikstonge/fstonge.AspNetCore</PackageProjectUrl>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
         <TargetFrameworks>net7.0;net6.0;net5.0</TargetFrameworks>
         <Version>1.3.0</Version>
         <Authors>Frederik St-Onge</Authors>
@@ -20,4 +21,7 @@
         <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       </PackageReference>
     </ItemGroup>
+	<ItemGroup>
+		<None Include="README.md" Pack="true" PackagePath="\"/>
+	</ItemGroup>
 </Project>
