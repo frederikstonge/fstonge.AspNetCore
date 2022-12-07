@@ -26,13 +26,11 @@ jobs:
       run: dotnet build --no-restore
     - name: Test
       run: dotnet test --no-build --verbosity normal
+    - name: Package NuGet
+      run: dotnet pack -c Release -o . src/fstonge.AspNetCore.Routing.Translation/fstonge.AspNetCore.Routing.Translation.csproj
     - name: Publish NuGet
-      uses: brandedoutcast/publish-nuget@v2.5.5
-      with:
-        PROJECT_FILE_PATH: src/fstonge.AspNetCore.Routing.Translation/fstonge.AspNetCore.Routing.Translation.csproj     
-        NUGET_KEY: ${{ secrets.NUGETAPIKEY }}
+      run: dotnet nuget push src/fstonge.AspNetCore.Routing.Translation/fstonge.AspNetCore.Routing.Translation.nupkg -k ${{ secrets.NUGETAPIKEY }} -s https://api.nuget.org/v3/index.json
+    - name: Package NuGet
+      run: dotnet pack -c Release -o . src/fstonge.AspNetCore.Session.Distributed/fstonge.AspNetCore.Session.Distributed.csproj 
     - name: Publish NuGet
-      uses: brandedoutcast/publish-nuget@v2.5.5
-      with:
-        PROJECT_FILE_PATH: src/fstonge.AspNetCore.Session.Distributed/fstonge.AspNetCore.Session.Distributed.csproj     
-        NUGET_KEY: ${{ secrets.NUGETAPIKEY }}
+      run: dotnet nuget push src/fstonge.AspNetCore.Session.Distributed/fstonge.AspNetCore.Session.Distributed.nupkg -k ${{ secrets.NUGETAPIKEY }} -s https://api.nuget.org/v3/index.json
