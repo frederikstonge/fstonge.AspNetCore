@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
         <PackageId>fstonge.AspNetCore.Routing.Translation</PackageId>
         <Title>AspNetCore Routing Translation</Title>
@@ -6,7 +6,7 @@
 		<PackageProjectUrl>https://github.com/frederikstonge/fstonge.AspNetCore</PackageProjectUrl>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
         <TargetFrameworks>net7.0;net6.0;net5.0</TargetFrameworks>
-        <Version>1.3.0</Version>
+        <Version>1.4.0</Version>
         <Authors>Frederik St-Onge</Authors>
         <Product>AspNetCore Routing Translation</Product>
         <Copyright>Frederik St-Onge 2020</Copyright>
